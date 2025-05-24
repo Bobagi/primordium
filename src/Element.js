@@ -15,14 +15,14 @@ const Element = ({
   const ref = useRef(null);
   const clickStart = useRef({ x: 0, y: 0 });
 
-  // Tamanho baseado no nome
+  // calcula tamanho com base no texto
   const fontSize = 14;
   const minSize = 60;
   const padding = 20;
   const textWidth = nome.length * fontSize * 0.6;
   const size = Math.max(minSize, textWidth + padding);
 
-  // Contraste da fonte
+  // escolhe cor de texto conforme contraste
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16));
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
   const textColor = brightness > 150 ? "black" : "white";
@@ -30,11 +30,13 @@ const Element = ({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // posiciona
     el.setAttribute("data-x", x);
     el.setAttribute("data-y", y);
     el.style.transform = `translate(${x}px, ${y}px)`;
     if (innerRef) innerRef(el);
 
+    // drag
     interact(el).draggable({
       listeners: {
         move(event) {
@@ -45,14 +47,29 @@ const Element = ({
           t.setAttribute("data-x", nx);
           t.setAttribute("data-y", ny);
           onMove(id, nx, ny);
+
+          // rastro de partículas
+          const trail = document.createElement("div");
+          trail.className = "trail";
+          document.body.appendChild(trail);
+          const rect = t.getBoundingClientRect();
+          trail.style.left = `${rect.left + rect.width / 2}px`;
+          trail.style.top = `${rect.top + rect.height / 2}px`;
+          trail.style.color = color;
+          const ang = Math.random() * 2 * Math.PI;
+          const dist = 10 + Math.random() * 10;
+          trail.style.setProperty("--dx", `${Math.cos(ang) * dist}px`);
+          trail.style.setProperty("--dy", `${Math.sin(ang) * dist}px`);
+          setTimeout(() => trail.remove(), 500);
         },
       },
     });
-  }, [x, y]);
+  }, [id, x, y, onMove, innerRef, color]);
 
   return (
     <div
       ref={ref}
+      className="elemento"
       onMouseDown={(e) => (clickStart.current = { x: e.clientX, y: e.clientY })}
       onMouseUp={(e) => {
         const dx = Math.abs(e.clientX - clickStart.current.x);
@@ -85,8 +102,6 @@ const Element = ({
           color: textColor,
           fontSize: `${fontSize}px`,
           fontWeight: "bold",
-          animation: "pulse 3s ease-in-out infinite",
-          boxShadow: "0 0 8px rgba(0,0,0,0.3)",
           overflow: "hidden",
           padding: "4px",
         }}

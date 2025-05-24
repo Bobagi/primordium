@@ -1,37 +1,4 @@
 /* ——————————————————————————————————————————— */
-/* BOLINHAS: pulso e sombra suave */
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-.pulse-content {
-  /* animação no próprio círculo */
-  will-change: transform;
-}
-
-/* se ainda quiser sombra na bolinha inteira */
-.elemento {
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-}
-
-/* ——————————————————————————————————————————— */
-/* CONEXÕES: traço animado correspondendo a fluxo */
-.connection {
-  stroke-dasharray: 5 5;
-  animation: dash 2s linear infinite;
-}
-@keyframes dash {
-  to {
-    stroke-dashoffset: 10;
-  }
-}
-
-/* ——————————————————————————————————————————— */
 /* PARTICULAS SIMPLES AO COMBINAR */
 .particle {
   position: absolute;
@@ -46,4 +13,56 @@
     transform: translate(var(--dx), var(--dy)) scale(0);
     opacity: 0;
   }
+}
+
+/* ——————————————————————————————————————————— */
+/* Partículas de rastro */
+@keyframes trail {
+  to {
+    transform: translate(var(--dx), var(--dy)) scale(0);
+    opacity: 0;
+  }
+}
+.trail {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  pointer-events: none;
+  opacity: 0.7;
+  animation: trail 0.5s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+/* ——————————————————————————————————————————— */
+/* BOLINHAS: pulso e sombra suave */
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+.pulse-content {
+  animation: pulse 3s ease-in-out infinite;
+  will-change: transform;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
+    0 0 16px rgba(255, 255, 255, 0.5), inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ——————————————————————————————————————————— */
+/* CONEXÕES: traço animado correspondendo a fluxo */
+@keyframes dash {
+  to {
+    stroke-dashoffset: 10;
+  }
+}
+
+.connection {
+  stroke-dasharray: 5 5;
+  animation: dash 2s linear infinite;
+  filter: drop-shadow(0 0 4px gray);
 }

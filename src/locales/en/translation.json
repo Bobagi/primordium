@@ -1,4 +1,6 @@
 {
+  "bookLink": "https://www.amazon.com/dp/B0B1QQ8HF7?tag=YOUR_AFFILIATE_ID",
+  "bookTooltip": "Read the recommended book",
   "removeOriginals": "Remove originals",
   "reset": "Reset",
   "tipClick": "💡 Tip: click a circle to open an informative link.",

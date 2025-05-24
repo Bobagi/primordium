@@ -15,6 +15,8 @@ export default function App() {
   const elementRefs = useRef({});
   const [, forceUpdate] = useState(0);
 
+  const canvasRef = useRef(null);
+
   useEffect(() => forceUpdate((n) => n + 1), [elements]);
 
   const registerCombo = (a, b) => {
@@ -75,9 +77,11 @@ export default function App() {
 
           setFeed((f) => [
             {
-              text: `${t(`elements.${moveBall.baseId || moveBall.id}.name`)} + ${t(
-                `elements.${o.baseId || o.id}.name`
-              )} = ${t(`elements.${result.id}.name`)}`,
+              text: `${t(
+                `elements.${moveBall.baseId || moveBall.id}.name`
+              )} + ${t(`elements.${o.baseId || o.id}.name`)} = ${t(
+                `elements.${result.id}.name`
+              )}`,
               ts: Date.now(),
             },
             ...f.slice(0, 4),
@@ -93,110 +97,148 @@ export default function App() {
   };
 
   return (
-    <div className="App" style={{ position: "relative" }}>
+    <div
+      className="App"
+      style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+    >
       <PhysicsEngine elements={elements} setElements={setElements} />
 
+      {/* Topo */}
       <div
         style={{
-          position: "absolute",
-          top: 10,
-          left: 10,
-          background: "#fff",
+          display: "flex",
+          gap: "12px",
           padding: "8px",
-          zIndex: 2,
           fontSize: "0.9em",
-          border: "1px solid #ccc",
+          zIndex: 2,
         }}
       >
-        <select
-          value={i18n.language}
-          onChange={(e) => i18n.changeLanguage(e.target.value)}
+        <div
+          style={{
+            background: "#fff",
+            padding: "8px",
+            border: "1px solid #ccc",
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "10px",
+          }}
         >
-          <option value="pt">Português</option>
-          <option value="en">English</option>
-        </select>{" "}
-        <label>
-          <input
-            type="checkbox"
-            checked={removeOnCombine}
-            onChange={(e) => setRemoveOnCombine(e.target.checked)}
-          />{" "}
-          {t("removeOriginals")}
-        </label>
-        <button onClick={reset} style={{ marginLeft: 10 }}>
-          {t("reset")}
-        </button>
-        <div style={{ marginTop: 6, color: "#444" }}>{t("tipClick")}</div>
+          <select
+            value={i18n.language}
+            onChange={(e) => i18n.changeLanguage(e.target.value)}
+          >
+            <option value="pt">Português</option>
+            <option value="en">English</option>
+          </select>
+          <label>
+            <input
+              type="checkbox"
+              checked={removeOnCombine}
+              onChange={(e) => setRemoveOnCombine(e.target.checked)}
+            />{" "}
+            {t("removeOriginals")}
+          </label>
+          <button onClick={reset}>{t("reset")}</button>
+          <div style={{ color: "#444", flexBasis: "100%" }}>
+            {t("tipClick")}
+          </div>
+        </div>
+        <div
+          style={{
+            background: "#fff",
+            padding: "8px",
+            border: "1px solid #ccc",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <a
+            href={t("bookLink")}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={t("bookTooltip")}
+          >
+            <img
+              src="/img/book-icon.png"
+              alt="Book"
+              style={{ width: 24, height: 24 }}
+            />
+          </a>
+        </div>
       </div>
 
-      <svg
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          pointerEvents: "none",
-          zIndex: 1,
-        }}
-      >
-        {elements.map((e1) =>
-          elements.map((e2) => {
-            if (e1.id >= e2.id) return null;
-            const n1 = elementRefs.current[e1.id];
-            const n2 = elementRefs.current[e2.id];
-            if (!n1 || !n2) return null;
-            const r1 = n1.getBoundingClientRect();
-            const r2 = n2.getBoundingClientRect();
-            const x1 = r1.left + r1.width / 2;
-            const y1 = r1.top + r1.height / 2;
-            const x2 = r2.left + r2.width / 2;
-            const y2 = r2.top + r2.height / 2;
-            return (
-              <line
-                key={`${e1.id}-${e2.id}`}
-                className="connection"
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
-                stroke="gray"
-                strokeWidth={1}
-              />
-            );
-          })
-        )}
-      </svg>
+      {/* bolinhas + conexões */}
+      <div ref={canvasRef} style={{ position: "relative", flex: 1 }}>
+        <svg
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+            zIndex: 1,
+          }}
+        >
+          {elements.map((e1) =>
+            elements.map((e2) => {
+              if (e1.id >= e2.id) return null;
+              const n1 = elementRefs.current[e1.id];
+              const n2 = elementRefs.current[e2.id];
+              if (!n1 || !n2) return null;
+              const r1 = n1.getBoundingClientRect();
+              const r2 = n2.getBoundingClientRect();
+              const offsetTop =
+                canvasRef.current?.getBoundingClientRect().top || 0;
+              const x1 = r1.left + r1.width / 2;
+              const y1 = r1.top + r1.height / 2 - offsetTop;
+              const x2 = r2.left + r2.width / 2;
+              const y2 = r2.top + r2.height / 2 - offsetTop;
+              return (
+                <line
+                  key={`${e1.id}-${e2.id}`}
+                  className="connection"
+                  x1={x1}
+                  y1={y1}
+                  x2={x2}
+                  y2={y2}
+                  stroke="gray"
+                  strokeWidth={1}
+                />
+              );
+            })
+          )}
+        </svg>
 
-      {elements.map((e) => {
-        const baseKey = e.baseId || e.id;
-        return (
-          <Element
-            key={e.id}
-            id={e.id}
-            x={e.x}
-            y={e.y}
-            name={t(`elements.${baseKey}.name`)}
-            wiki={t(`elements.${baseKey}.wiki`)}
-            description={t(`elements.${baseKey}.description`)}
-            image={e.image}
-            color={e.color}
-            innerRef={(node) => (elementRefs.current[e.id] = node)}
-            onMove={handleMove}
-          />
-        );
-      })}
+        {elements.map((e) => {
+          const baseKey = e.baseId || e.id;
+          return (
+            <Element
+              key={e.id}
+              id={e.id}
+              x={e.x}
+              y={e.y}
+              name={t(`elements.${baseKey}.name`)}
+              wiki={t(`elements.${baseKey}.wiki`)}
+              description={t(`elements.${baseKey}.description`)}
+              image={e.image}
+              color={e.color}
+              innerRef={(node) => (elementRefs.current[e.id] = node)}
+              onMove={handleMove}
+            />
+          );
+        })}
+      </div>
 
+      {/* Feed final da tela */}
       <div
         style={{
-          position: "absolute",
-          bottom: 10,
-          left: 10,
           background: "#fff",
           padding: "10px",
-          border: "1px solid #ccc",
+          borderTop: "1px solid #ccc",
           fontFamily: "monospace",
-          maxWidth: 300,
           fontSize: "0.9em",
           zIndex: 2,
         }}

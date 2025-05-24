@@ -4,15 +4,18 @@
   "tipClick": "💡 Tip: click a circle to open an informative link.",
   "combinations": "Combinations",
   "elements": {
-    "ferro": {
+    "iron": {
+      "name": "Iron",
       "description": "Find iron ore in riverbeds with reddish stones (bog iron). Crush, wash out impurities, and use a clay furnace with charcoal to reduce oxides to metallic iron (bloom). Use stone hammers to forge tools.",
       "wiki": "https://en.wikipedia.org/wiki/Iron"
     },
-    "carbono": {
+    "carbon": {
+      "name": "Carbon",
       "description": "Make charcoal by stacking wood in a clay pit and limiting air. Light the wood and keep a smoldering burn for days. This charcoal serves as a high-heat fuel.",
       "wiki": "https://en.wikipedia.org/wiki/Charcoal"
     },
-    "aco": {
+    "steel": {
+      "name": "Steel",
       "description": "Steel is made by carburizing iron in simple furnaces. Under low-oxygen conditions, bury pieces of iron in charcoal and heat to infuse carbon. You can use clay molds to shape blades, tools and structural parts.",
       "wiki": "https://en.wikipedia.org/wiki/Steel"
     }

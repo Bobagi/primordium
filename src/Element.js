@@ -1,9 +1,9 @@
 import interact from "interactjs";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const Element = ({
   id,
-  nome,
+  name,
   x,
   y,
   color = "#3498db",
@@ -15,14 +15,12 @@ const Element = ({
   const ref = useRef(null);
   const clickStart = useRef({ x: 0, y: 0 });
 
-  // calcula tamanho com base no texto
   const fontSize = 14;
   const minSize = 60;
   const padding = 20;
-  const textWidth = nome.length * fontSize * 0.6;
+  const textWidth = name.length * fontSize * 0.6;
   const size = Math.max(minSize, textWidth + padding);
 
-  // escolhe cor de texto conforme contraste
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16));
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
   const textColor = brightness > 150 ? "black" : "white";
@@ -30,13 +28,11 @@ const Element = ({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    // posiciona
     el.setAttribute("data-x", x);
     el.setAttribute("data-y", y);
     el.style.transform = `translate(${x}px, ${y}px)`;
     if (innerRef) innerRef(el);
 
-    // drag
     interact(el).draggable({
       listeners: {
         move(event) {
@@ -48,7 +44,6 @@ const Element = ({
           t.setAttribute("data-y", ny);
           onMove(id, nx, ny);
 
-          // rastro de partículas
           const trail = document.createElement("div");
           trail.className = "trail";
           document.body.appendChild(trail);
@@ -109,7 +104,7 @@ const Element = ({
         {image && (
           <img
             src={image}
-            alt={nome}
+            alt={name}
             style={{
               maxWidth: "60%",
               maxHeight: "60%",
@@ -118,7 +113,7 @@ const Element = ({
             }}
           />
         )}
-        <span>{nome}</span>
+        <span>{name}</span>
       </div>
     </div>
   );

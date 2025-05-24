@@ -1,51 +1,20 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Element from "./Element";
 import PhysicsEngine from "./PhysicsEngine";
-
-const combos = {
-  "ferro+carbono": {
-    id: "aco",
-    nome: { pt: "Aço", en: "Steel" },
-    image: "/img/steel.png",
-  },
-};
-
-const randomColor = () =>
-  `#${Math.floor(Math.random() * 0xffffff)
-    .toString(16)
-    .padStart(6, "0")}`;
-
-const initialElements = [
-  {
-    id: "ferro",
-    nome: { pt: "Ferro", en: "Iron" },
-    x: 100,
-    y: 100,
-    image: "/img/iron.png",
-  },
-  {
-    id: "carbono",
-    nome: { pt: "Carbono", en: "Carbon" },
-    x: 250,
-    y: 200,
-    image: "/img/carbon.png",
-  },
-];
+import { combos } from "./data/elements";
+import { createInitialElements } from "./utils/elementFactory";
 
 export default function App() {
   const { t, i18n } = useTranslation();
 
-  const [elements, setElements] = useState(() =>
-    initialElements.map((e) => ({ ...e, color: randomColor() }))
-  );
+  const [elements, setElements] = useState(() => createInitialElements());
   const [feed, setFeed] = useState([]);
   const [removeOnCombine, setRemoveOnCombine] = useState(true);
   const recentlyCombined = useRef(new Set());
   const elementRefs = useRef({});
   const [, forceUpdate] = useState(0);
 
-  // refresha linhas quando elements mudar
   useEffect(() => forceUpdate((n) => n + 1), [elements]);
 
   const registerCombo = (a, b) => {
@@ -68,11 +37,10 @@ export default function App() {
 
   const handleMove = useCallback(
     (id, nx, ny) => {
-      // atualiza posição
       setElements((els) =>
         els.map((e) => (e.id === id ? { ...e, x: nx, y: ny } : e))
       );
-      const mover = elements.find((e) => e.id === id);
+      const moveBall = elements.find((e) => e.id === id);
 
       elements
         .filter((e) => e.id !== id)
@@ -82,9 +50,9 @@ export default function App() {
           const result = combos[`${id}+${o.id}`] || combos[`${o.id}+${id}`];
           if (!result || dist >= 60 || recentlyCombined.current.has(key))
             return;
+
           registerCombo(id, o.id);
 
-          // cria a nova bolinha via tradução
           const newId = `${result.id}-${Date.now()}`;
           const newX = (nx + o.x) / 2 + 60;
           const newY = (ny + o.y) / 2;
@@ -96,28 +64,31 @@ export default function App() {
               ...base,
               {
                 id: newId,
-                nome: result.nome,
+                baseId: result.id,
                 image: result.image,
                 x: newX,
                 y: newY,
-                color: mixColors(mover.color, o.color),
+                color: mixColors(moveBall.color, o.color),
               },
             ];
           });
+
           setFeed((f) => [
             {
-              text: `${mover.nome} + ${o.nome} = ${result.nome}`,
+              text: `${t(`elements.${moveBall.baseId || moveBall.id}.name`)} + ${t(
+                `elements.${o.baseId || o.id}.name`
+              )} = ${t(`elements.${result.id}.name`)}`,
               ts: Date.now(),
             },
             ...f.slice(0, 4),
           ]);
         });
     },
-    [elements, removeOnCombine]
+    [elements, removeOnCombine, t]
   );
 
   const reset = () => {
-    setElements(initialElements.map((e) => ({ ...e, color: randomColor() })));
+    setElements(createInitialElements());
     setFeed([]);
   };
 
@@ -125,7 +96,6 @@ export default function App() {
     <div className="App" style={{ position: "relative" }}>
       <PhysicsEngine elements={elements} setElements={setElements} />
 
-      {/* idioma + controles */}
       <div
         style={{
           position: "absolute",
@@ -159,7 +129,6 @@ export default function App() {
         <div style={{ marginTop: 6, color: "#444" }}>{t("tipClick")}</div>
       </div>
 
-      {/* conexões */}
       <svg
         style={{
           position: "absolute",
@@ -199,28 +168,25 @@ export default function App() {
         )}
       </svg>
 
-      {/* bolinhas */}
-      {elements.map((e) => (
-        <Element
-          key={e.id}
-          id={e.id}
-          x={e.x}
-          y={e.y}
-          nome={e.nome[i18n.language] || e.nome.pt}
-          wiki={t(`elements.${e.id}.wiki`)}
-          description={t(`elements.${e.id}.description`)}
-          image={
-            typeof e.image === "string"
-              ? e.image
-              : e.image?.[i18n.language] || e.image?.pt
-          }
-          color={e.color}
-          innerRef={(node) => (elementRefs.current[e.id] = node)}
-          onMove={handleMove}
-        />
-      ))}
+      {elements.map((e) => {
+        const baseKey = e.baseId || e.id;
+        return (
+          <Element
+            key={e.id}
+            id={e.id}
+            x={e.x}
+            y={e.y}
+            name={t(`elements.${baseKey}.name`)}
+            wiki={t(`elements.${baseKey}.wiki`)}
+            description={t(`elements.${baseKey}.description`)}
+            image={e.image}
+            color={e.color}
+            innerRef={(node) => (elementRefs.current[e.id] = node)}
+            onMove={handleMove}
+          />
+        );
+      })}
 
-      {/* histórico */}
       <div
         style={{
           position: "absolute",

@@ -21,7 +21,7 @@ export default function PhysicsEngine({ elements, setElements }) {
     elements.forEach((el) => {
       const body = Bodies.circle(el.x + 30, el.y + 30, 30, {
         id: el.id,
-        label: el.nome,
+        label: el.name,
         restitution: 0.9,
         friction: 0.05,
         frictionAir: 0.02,

@@ -1,9 +1,9 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
-import "./index.css";
-import "./style.css";
 import Element from "./Element";
+import "./index.css";
 import PhysicsEngine from "./PhysicsEngine";
+import "./style.css";
 
 const combos = {
   "ferro+carbono": { id: "aco", nome: "Aço" },
@@ -40,9 +40,26 @@ export default function App() {
 
   // Estado principal
   const [elements, setElements] = useState([
-    { id: "ferro", nome: "Ferro", x: 100, y: 100, color: randomColor() },
-    { id: "carbono", nome: "Carbono", x: 250, y: 200, color: randomColor() },
+    {
+      id: "ferro",
+      nome: "Ferro",
+      x: 100,
+      y: 100,
+      color: randomColor(),
+      wiki: "https://pt.wikipedia.org/wiki/Ferro",
+      image: "/img/ferro.png", // coloque essa imagem em public/img/ferro.png
+    },
+    {
+      id: "carbono",
+      nome: "Carbono",
+      x: 250,
+      y: 200,
+      color: randomColor(),
+      wiki: "https://pt.wikipedia.org/wiki/Carbono",
+      image: "/img/carbono.png",
+    },
   ]);
+
   const [feed, setFeed] = useState([]);
   const [removeOnCombine, setRemoveOnCombine] = useState(true);
 
@@ -115,13 +132,29 @@ export default function App() {
   );
 
   // Reset ao estado inicial (com novas cores aleatórias)
-  const reset = useCallback(() => {
+  const reset = () => {
     setElements([
-      { id: "ferro", nome: "Ferro", x: 100, y: 100, color: randomColor() },
-      { id: "carbono", nome: "Carbono", x: 250, y: 200, color: randomColor() },
+      {
+        id: "ferro",
+        nome: "Ferro",
+        x: 100,
+        y: 100,
+        color: randomColor(),
+        image: "/img/ferro.png",
+        wiki: "https://pt.wikipedia.org/wiki/Ferro",
+      },
+      {
+        id: "carbono",
+        nome: "Carbono",
+        x: 250,
+        y: 200,
+        color: randomColor(),
+        image: "/img/carbono.png",
+        wiki: "https://pt.wikipedia.org/wiki/Carbono",
+      },
     ]);
     setFeed([]);
-  }, []);
+  };
 
   return (
     <div className="App" style={{ position: "relative" }}>
@@ -200,6 +233,8 @@ export default function App() {
           x={e.x}
           y={e.y}
           color={e.color}
+          image={e.image}
+          wiki={e.wiki}
           innerRef={(node) => (elementRefs.current[e.id] = node)}
           onMove={handleMove}
         />

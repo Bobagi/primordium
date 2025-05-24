@@ -1,11 +1,10 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Element from "./Element";
+import PhysicsEngine from "./PhysicsEngine";
 
 const combos = {
   "ferro+carbono": { id: "aco", nome: "Aço" },
 };
-
-const removeOnCombine = true;
 
 export default function App() {
   const [elements, setElements] = useState([
@@ -13,38 +12,35 @@ export default function App() {
     { id: "carbono", nome: "Carbono", x: 250, y: 200 },
   ]);
   const [feed, setFeed] = useState([]);
+  const [removeOnCombine, setRemoveOnCombine] = useState(true);
   const recentlyCombined = useRef(new Set());
 
-  const registerCombo = (id1, id2) => {
-    const key = [id1, id2].sort().join("+");
+  const registerCombo = (a, b) => {
+    const key = [a, b].sort().join("+");
     recentlyCombined.current.add(key);
-    setTimeout(() => recentlyCombined.current.delete(key), 1000); // cooldown de 1s
+    setTimeout(() => recentlyCombined.current.delete(key), 500);
   };
-
-  const hasCombinedRecently = (id1, id2) => {
-    const key = [id1, id2].sort().join("+");
-    return recentlyCombined.current.has(key);
-  };
+  const hasCombinedRecently = (a, b) =>
+    recentlyCombined.current.has([a, b].sort().join("+"));
 
   const handleMove = useCallback(
     (id, nx, ny) => {
       setElements((els) =>
         els.map((e) => (e.id === id ? { ...e, x: nx, y: ny } : e))
       );
-
       const mover = elements.find((e) => e.id === id);
-      const outros = elements.filter((e) => e.id !== id);
+      elements
+        .filter((e) => e.id !== id)
+        .forEach((o) => {
+          const pairKey = [id, o.id].sort().join("+");
+          const dist = Math.hypot(nx - o.x, ny - o.y);
+          const result = combos[`${id}+${o.id}`] || combos[`${o.id}+${id}`];
 
-      for (const o of outros) {
-        if (hasCombinedRecently(id, o.id)) continue;
+          // só combina se: tem resultado E não combinou antes E estão colidindo
+          if (result && dist < 60 && !recentlyCombined.current.has(pairKey)) {
+            recentlyCombined.current.add(pairKey); // registra
+            setTimeout(() => recentlyCombined.current.delete(pairKey), 2000); // cooldown
 
-        const dx = nx - o.x;
-        const dy = ny - o.y;
-        if (Math.hypot(dx, dy) < 60) {
-          const key = `${id}+${o.id}`;
-          const result = combos[key] || combos[`${o.id}+${id}`];
-          if (result) {
-            registerCombo(id, o.id);
             setElements((prev) => {
               const base = removeOnCombine
                 ? prev.filter((e) => e.id !== id && e.id !== o.id)
@@ -59,6 +55,7 @@ export default function App() {
                 },
               ];
             });
+
             setFeed((f) => [
               {
                 text: `${mover.nome} + ${o.nome} = ${result.nome}`,
@@ -67,32 +64,53 @@ export default function App() {
               ...f.slice(0, 4),
             ]);
           }
-        }
-      }
+        });
     },
-    [elements]
+    [elements, removeOnCombine]
   );
+
+  const reset = () => {
+    setElements([
+      { id: "ferro", nome: "Ferro", x: 100, y: 100 },
+      { id: "carbono", nome: "Carbono", x: 250, y: 200 },
+    ]);
+    setFeed([]);
+  };
 
   return (
     <div className="App">
+      <PhysicsEngine elements={elements} setElements={setElements} />
+      {/* Controles */}
       <div
         style={{
           position: "absolute",
           top: 10,
           left: 10,
-          padding: 5,
           background: "#fff",
+          padding: "8px",
         }}
       >
-        Remover originais: {removeOnCombine ? "Sim" : "Não"}
+        <label>
+          <input
+            type="checkbox"
+            checked={removeOnCombine}
+            onChange={(e) => setRemoveOnCombine(e.target.checked)}
+          />{" "}
+          Remover originais
+        </label>
+        <button onClick={reset} style={{ marginLeft: 10 }}>
+          Reset
+        </button>
       </div>
 
+      {/* Linhas */}
       <svg
         style={{
           position: "absolute",
           width: "100vw",
           height: "100vh",
           zIndex: 0,
+          pointerEvents: "none", // 👈 ESSA LINHA
         }}
       >
         {elements.map((e1) =>
@@ -113,6 +131,7 @@ export default function App() {
         )}
       </svg>
 
+      {/* Bolinhas */}
       {elements.map((e) => (
         <Element
           key={e.id}
@@ -124,6 +143,7 @@ export default function App() {
         />
       ))}
 
+      {/* Feed */}
       <div
         style={{
           position: "absolute",

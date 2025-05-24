@@ -1,21 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import "./App.css";
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import Element from "./Element";
-import "./index.css";
 import PhysicsEngine from "./PhysicsEngine";
-import "./style.css";
 
-const combos = {
-  "ferro+carbono": { id: "aco", nome: "Aço" },
-};
-
-// Gera cor aleatória
+const combos = { "ferro+carbono": { id: "aco", nome: "Aço" } };
 const randomColor = () =>
   `#${Math.floor(Math.random() * 0xffffff)
     .toString(16)
     .padStart(6, "0")}`;
 
-// Base de elementos iniciais (sem cor)
 const initialElements = [
   {
     id: "ferro",
@@ -36,7 +29,8 @@ const initialElements = [
 ];
 
 export default function App() {
-  // Estado com cores randomizadas
+  const { t, i18n } = useTranslation();
+
   const [elements, setElements] = useState(() =>
     initialElements.map((e) => ({ ...e, color: randomColor() }))
   );
@@ -46,38 +40,31 @@ export default function App() {
   const elementRefs = useRef({});
   const [, forceUpdate] = useState(0);
 
-  // Força re-render das linhas quando elements muda
-  useEffect(() => {
-    forceUpdate((n) => n + 1);
-  }, [elements]);
+  useEffect(() => forceUpdate((n) => n + 1), [elements]);
 
-  // Evita múltiplas combinações seguidas
   const registerCombo = (a, b) => {
     const key = [a, b].sort().join("+");
     recentlyCombined.current.add(key);
     setTimeout(() => recentlyCombined.current.delete(key), 500);
   };
 
-  // Mix de cores para resultado do combo
-  const mixColors = (hex1, hex2) => {
-    const toRgb = (hex) =>
-      hex.length === 7
-        ? [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
+  const mixColors = (h1, h2) => {
+    const toRgb = (h) =>
+      h.length === 7
+        ? [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))
         : [0, 0, 0];
-    const [r1, g1, b1] = toRgb(hex1);
-    const [r2, g2, b2] = toRgb(hex2);
+    const [r1, g1, b1] = toRgb(h1);
+    const [r2, g2, b2] = toRgb(h2);
     return `rgb(${Math.floor((r1 + r2) / 2)},${Math.floor(
       (g1 + g2) / 2
     )},${Math.floor((b1 + b2) / 2)})`;
   };
 
-  // Quando move uma bolinha
   const handleMove = useCallback(
     (id, nx, ny) => {
       setElements((els) =>
         els.map((e) => (e.id === id ? { ...e, x: nx, y: ny } : e))
       );
-
       const mover = elements.find((e) => e.id === id);
       elements
         .filter((e) => e.id !== id)
@@ -85,13 +72,9 @@ export default function App() {
           const key = [id, o.id].sort().join("+");
           const dist = Math.hypot(nx - o.x, ny - o.y);
           const result = combos[`${id}+${o.id}`] || combos[`${o.id}+${id}`];
-
           if (!result || dist >= 60 || recentlyCombined.current.has(key))
             return;
-
           registerCombo(id, o.id);
-
-          // Atualiza bolinhas, removendo ou não as originais
           setElements((prev) => {
             const base = removeOnCombine
               ? prev.filter((e) => e.id !== id && e.id !== o.id)
@@ -107,8 +90,6 @@ export default function App() {
               },
             ];
           });
-
-          // Adiciona ao feed
           setFeed((f) => [
             {
               text: `${mover.nome} + ${o.nome} = ${result.nome}`,
@@ -121,14 +102,8 @@ export default function App() {
     [elements, removeOnCombine]
   );
 
-  // Reset sem duplicar manualmente
   const reset = () => {
-    setElements(
-      initialElements.map((e) => ({
-        ...e,
-        color: randomColor(),
-      }))
-    );
+    setElements(initialElements.map((e) => ({ ...e, color: randomColor() })));
     setFeed([]);
   };
 
@@ -136,7 +111,7 @@ export default function App() {
     <div className="App" style={{ position: "relative" }}>
       <PhysicsEngine elements={elements} setElements={setElements} />
 
-      {/* Controles e Dica */}
+      {/* idioma + controles */}
       <div
         style={{
           position: "absolute",
@@ -145,26 +120,32 @@ export default function App() {
           background: "#fff",
           padding: "8px",
           zIndex: 2,
+          fontSize: "0.9em",
           border: "1px solid #ccc",
         }}
       >
+        <select
+          value={i18n.language}
+          onChange={(e) => i18n.changeLanguage(e.target.value)}
+        >
+          <option value="pt">Português</option>
+          <option value="en">English</option>
+        </select>{" "}
         <label>
           <input
             type="checkbox"
             checked={removeOnCombine}
             onChange={(e) => setRemoveOnCombine(e.target.checked)}
           />{" "}
-          Remover originais
+          {t("removeOriginals")}
         </label>
         <button onClick={reset} style={{ marginLeft: 10 }}>
-          Reset
+          {t("reset")}
         </button>
-        <div style={{ marginTop: 8, fontSize: "0.85em" }}>
-          💡 Clique em uma bolinha para abrir um link com mais informações.
-        </div>
+        <div style={{ marginTop: 6, color: "#444" }}>{t("tipClick")}</div>
       </div>
 
-      {/* Conexões */}
+      {/* conexões */}
       <svg
         style={{
           position: "absolute",
@@ -204,46 +185,35 @@ export default function App() {
         )}
       </svg>
 
-      {/* Bolinhas */}
+      {/* bolinhas */}
       {elements.map((e) => (
         <Element
           key={e.id}
-          id={e.id}
-          nome={e.nome}
-          x={e.x}
-          y={e.y}
-          color={e.color}
-          image={e.image}
-          wiki={e.wiki}
+          {...e}
           innerRef={(node) => (elementRefs.current[e.id] = node)}
           onMove={handleMove}
         />
       ))}
 
-      {/* Histórico de Combinações */}
+      {/* histórico */}
       <div
         style={{
           position: "absolute",
-          top: 10,
-          right: 10,
+          bottom: 10,
+          left: 10,
           background: "#fff",
           padding: "10px",
           border: "1px solid #ccc",
           fontFamily: "monospace",
           maxWidth: 300,
           fontSize: "0.9em",
-          zIndex: 9999,
-          textAlign: "left",
+          zIndex: 2,
         }}
       >
-        <strong>Combinações:</strong>
-        {feed.length === 0 ? (
-          <div style={{ fontStyle: "italic", color: "#888" }}>
-            Nenhuma ainda.
-          </div>
-        ) : (
-          feed.map((item) => <div key={item.ts}>{item.text}</div>)
-        )}
+        <strong>{t("combinations")}:</strong>
+        {feed.map((item) => (
+          <div key={item.ts}>{item.text}</div>
+        ))}
       </div>
     </div>
   );

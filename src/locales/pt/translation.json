@@ -1,6 +1,20 @@
 {
   "removeOriginals": "Remover originais",
-  "reset": "Reset",
+  "reset": "Resetar",
   "tipClick": "💡 Dica: clique em uma bolinha para abrir um link com mais informações.",
-  "combinations": "Combinações"
+  "combinations": "Combinações",
+  "elements": {
+    "ferro": {
+      "description": "Encontre minérios de ferro em leitos de rios com pedras vermelhas (bog iron). Triture, separe impurezas e use um forno de barro com carvão para reduzir óxidos a ferro metálico (bloom). Empregue martelos de pedra para forjar ferramentas.",
+      "wiki": "https://pt.wikipedia.org/wiki/Ferro"
+    },
+    "carbono": {
+      "description": "Produza carvão vegetal empilhando lenha em uma câmara de barro e isolando a entrada de oxigênio. Acenda a lenha e mantenha chama branda por dias. Esse carvão é fundamental como combustível de alto calor.",
+      "wiki": "https://pt.wikipedia.org/wiki/Carv%C3%A3o"
+    },
+    "aco": {
+      "description": "O aço é feito carburizando ferro em fornos rudimentares. Em condições de baixo oxigênio, enterre pedaços de ferro com carvão e aqueça para incorporar carbono. Você pode usar moldes de barro para dar forma a lâminas, ferramentas e estruturas.",
+      "wiki": "https://pt.wikipedia.org/wiki/A%C3%A7o"
+    }
+  }
 }

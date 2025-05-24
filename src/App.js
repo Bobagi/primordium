@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Element from "./Element";
 import PhysicsEngine from "./PhysicsEngine";
@@ -7,10 +7,6 @@ const combos = {
   "ferro+carbono": {
     id: "aco",
     nome: { pt: "Aço", en: "Steel" },
-    wiki: {
-      pt: "https://pt.wikipedia.org/wiki/A%C3%A7o",
-      en: "https://en.wikipedia.org/wiki/Steel",
-    },
     image: "/img/steel.png",
   },
 };
@@ -26,10 +22,6 @@ const initialElements = [
     nome: { pt: "Ferro", en: "Iron" },
     x: 100,
     y: 100,
-    wiki: {
-      pt: "https://pt.wikipedia.org/wiki/Ferro",
-      en: "https://en.wikipedia.org/wiki/Iron",
-    },
     image: "/img/iron.png",
   },
   {
@@ -37,10 +29,6 @@ const initialElements = [
     nome: { pt: "Carbono", en: "Carbon" },
     x: 250,
     y: 200,
-    wiki: {
-      pt: "https://pt.wikipedia.org/wiki/Carbono",
-      en: "https://en.wikipedia.org/wiki/Carbon",
-    },
     image: "/img/carbon.png",
   },
 ];
@@ -57,6 +45,7 @@ export default function App() {
   const elementRefs = useRef({});
   const [, forceUpdate] = useState(0);
 
+  // refresha linhas quando elements mudar
   useEffect(() => forceUpdate((n) => n + 1), [elements]);
 
   const registerCombo = (a, b) => {
@@ -79,10 +68,12 @@ export default function App() {
 
   const handleMove = useCallback(
     (id, nx, ny) => {
+      // atualiza posição
       setElements((els) =>
         els.map((e) => (e.id === id ? { ...e, x: nx, y: ny } : e))
       );
       const mover = elements.find((e) => e.id === id);
+
       elements
         .filter((e) => e.id !== id)
         .forEach((o) => {
@@ -92,6 +83,11 @@ export default function App() {
           if (!result || dist >= 60 || recentlyCombined.current.has(key))
             return;
           registerCombo(id, o.id);
+
+          // cria a nova bolinha via tradução
+          const newId = `${result.id}-${Date.now()}`;
+          const newX = (nx + o.x) / 2 + 60;
+          const newY = (ny + o.y) / 2;
           setElements((prev) => {
             const base = removeOnCombine
               ? prev.filter((e) => e.id !== id && e.id !== o.id)
@@ -99,12 +95,11 @@ export default function App() {
             return [
               ...base,
               {
-                id: `${result.id}-${Date.now()}`,
+                id: newId,
                 nome: result.nome,
-                wiki: result.wiki,
                 image: result.image,
-                x: (nx + o.x) / 2 + 60,
-                y: (ny + o.y) / 2,
+                x: newX,
+                y: newY,
                 color: mixColors(mover.color, o.color),
               },
             ];
@@ -212,7 +207,8 @@ export default function App() {
           x={e.x}
           y={e.y}
           nome={e.nome[i18n.language] || e.nome.pt}
-          wiki={e.wiki?.[i18n.language]}
+          wiki={t(`elements.${e.id}.wiki`)}
+          description={t(`elements.${e.id}.description`)}
           image={
             typeof e.image === "string"
               ? e.image

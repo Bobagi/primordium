@@ -1,0 +1,49 @@
+/* ——————————————————————————————————————————— */
+/* BOLINHAS: pulso e sombra suave */
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+.pulse-content {
+  /* animação no próprio círculo */
+  will-change: transform;
+}
+
+/* se ainda quiser sombra na bolinha inteira */
+.elemento {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ——————————————————————————————————————————— */
+/* CONEXÕES: traço animado correspondendo a fluxo */
+.connection {
+  stroke-dasharray: 5 5;
+  animation: dash 2s linear infinite;
+}
+@keyframes dash {
+  to {
+    stroke-dashoffset: 10;
+  }
+}
+
+/* ——————————————————————————————————————————— */
+/* PARTICULAS SIMPLES AO COMBINAR */
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: fly 0.8s ease-out forwards;
+}
+@keyframes fly {
+  to {
+    transform: translate(var(--dx), var(--dy)) scale(0);
+    opacity: 0;
+  }
+}

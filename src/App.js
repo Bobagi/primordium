@@ -7,13 +7,32 @@ const combos = {
 };
 
 export default function App() {
+  const randomColor = () =>
+    `#${Math.floor(Math.random() * 0xffffff)
+      .toString(16)
+      .padStart(6, "0")}`;
+
   const [elements, setElements] = useState([
-    { id: "ferro", nome: "Ferro", x: 100, y: 100 },
-    { id: "carbono", nome: "Carbono", x: 250, y: 200 },
+    { id: "ferro", nome: "Ferro", x: 100, y: 100, color: randomColor() },
+    { id: "carbono", nome: "Carbono", x: 250, y: 200, color: randomColor() },
   ]);
+
   const [feed, setFeed] = useState([]);
   const [removeOnCombine, setRemoveOnCombine] = useState(true);
   const recentlyCombined = useRef(new Set());
+
+  function mixColors(hex1, hex2) {
+    const toRgb = (hex) =>
+      hex.length === 7
+        ? [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
+        : [0, 0, 0];
+    const [r1, g1, b1] = toRgb(hex1);
+    const [r2, g2, b2] = toRgb(hex2);
+    const r = Math.floor((r1 + r2) / 2);
+    const g = Math.floor((g1 + g2) / 2);
+    const b = Math.floor((b1 + b2) / 2);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
 
   const registerCombo = (a, b) => {
     const key = [a, b].sort().join("+");
@@ -52,6 +71,7 @@ export default function App() {
                   nome: result.nome,
                   x: (nx + o.x) / 2 + 60,
                   y: (ny + o.y) / 2,
+                  color: mixColors(mover.color, o.color),
                 },
               ];
             });
@@ -139,6 +159,7 @@ export default function App() {
           nome={e.nome}
           x={e.x}
           y={e.y}
+          color={e.color}
           onMove={handleMove}
         />
       ))}

@@ -1,7 +1,7 @@
 import interact from "interactjs";
 import React, { useEffect, useRef } from "react";
 
-const Element = ({ nome, x, y, id, onMove, innerRef }) => {
+const Element = ({ nome, x, y, id, onMove, innerRef, color = "#3498db" }) => {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const Element = ({ nome, x, y, id, onMove, innerRef }) => {
         width: "60px",
         height: "60px",
         borderRadius: "50%",
-        backgroundColor: "#3498db",
+        backgroundColor: color,
         color: "white",
         fontWeight: "bold",
         display: "flex",

@@ -9,14 +9,56 @@ const combos = {
   "ferro+carbono": { id: "aco", nome: "Aço" },
 };
 
-export default function App() {
-  // Gera cor hex aleatória
-  const randomColor = () =>
-    `#${Math.floor(Math.random() * 0xffffff)
-      .toString(16)
-      .padStart(6, "0")}`;
+// Gera cor aleatória
+const randomColor = () =>
+  `#${Math.floor(Math.random() * 0xffffff)
+    .toString(16)
+    .padStart(6, "0")}`;
 
-  // Mix de duas cores
+// Base de elementos iniciais (sem cor)
+const initialElements = [
+  {
+    id: "ferro",
+    nome: "Ferro",
+    x: 100,
+    y: 100,
+    wiki: "https://pt.wikipedia.org/wiki/Ferro",
+    image: "/img/ferro.png",
+  },
+  {
+    id: "carbono",
+    nome: "Carbono",
+    x: 250,
+    y: 200,
+    wiki: "https://pt.wikipedia.org/wiki/Carbono",
+    image: "/img/carbono.png",
+  },
+];
+
+export default function App() {
+  // Estado com cores randomizadas
+  const [elements, setElements] = useState(() =>
+    initialElements.map((e) => ({ ...e, color: randomColor() }))
+  );
+  const [feed, setFeed] = useState([]);
+  const [removeOnCombine, setRemoveOnCombine] = useState(true);
+  const recentlyCombined = useRef(new Set());
+  const elementRefs = useRef({});
+  const [, forceUpdate] = useState(0);
+
+  // Força re-render das linhas quando elements muda
+  useEffect(() => {
+    forceUpdate((n) => n + 1);
+  }, [elements]);
+
+  // Evita múltiplas combinações seguidas
+  const registerCombo = (a, b) => {
+    const key = [a, b].sort().join("+");
+    recentlyCombined.current.add(key);
+    setTimeout(() => recentlyCombined.current.delete(key), 500);
+  };
+
+  // Mix de cores para resultado do combo
   const mixColors = (hex1, hex2) => {
     const toRgb = (hex) =>
       hex.length === 7
@@ -29,79 +71,27 @@ export default function App() {
     )},${Math.floor((b1 + b2) / 2)})`;
   };
 
-  // Calcula tamanho da bolinha baseado no texto
-  const getSize = (nome) => {
-    const fontSize = 14;
-    const minSize = 60;
-    const padding = 20;
-    const textWidth = nome.length * fontSize * 0.6;
-    return Math.max(minSize, textWidth + padding);
-  };
-
-  // Estado principal
-  const [elements, setElements] = useState([
-    {
-      id: "ferro",
-      nome: "Ferro",
-      x: 100,
-      y: 100,
-      color: randomColor(),
-      wiki: "https://pt.wikipedia.org/wiki/Ferro",
-      image: "/img/ferro.png", // coloque essa imagem em public/img/ferro.png
-    },
-    {
-      id: "carbono",
-      nome: "Carbono",
-      x: 250,
-      y: 200,
-      color: randomColor(),
-      wiki: "https://pt.wikipedia.org/wiki/Carbono",
-      image: "/img/carbono.png",
-    },
-  ]);
-
-  const [feed, setFeed] = useState([]);
-  const [removeOnCombine, setRemoveOnCombine] = useState(true);
-
-  // Para evitar múltiplas combinações seguidas
-  const recentlyCombined = useRef(new Set());
-
-  // Refs dos nodes DOM das bolinhas
-  const elementRefs = useRef({});
-
-  // Força re-render das linhas quando elements muda
-  const [, forceUpdate] = useState(0);
-  useEffect(() => {
-    forceUpdate((n) => n + 1);
-  }, [elements]);
-
-  // Registra combo e limpa após cooldown
-  const registerCombo = (a, b) => {
-    const key = [a, b].sort().join("+");
-    recentlyCombined.current.add(key);
-    setTimeout(() => recentlyCombined.current.delete(key), 500);
-  };
-
-  // Lógica de mover + detectar combinação
+  // Quando move uma bolinha
   const handleMove = useCallback(
     (id, nx, ny) => {
       setElements((els) =>
         els.map((e) => (e.id === id ? { ...e, x: nx, y: ny } : e))
       );
+
       const mover = elements.find((e) => e.id === id);
       elements
         .filter((e) => e.id !== id)
         .forEach((o) => {
-          const pairKey = [id, o.id].sort().join("+");
+          const key = [id, o.id].sort().join("+");
           const dist = Math.hypot(nx - o.x, ny - o.y);
           const result = combos[`${id}+${o.id}`] || combos[`${o.id}+${id}`];
 
-          if (!result || dist >= 60 || recentlyCombined.current.has(pairKey))
+          if (!result || dist >= 60 || recentlyCombined.current.has(key))
             return;
 
           registerCombo(id, o.id);
 
-          // atualiza bolinhas
+          // Atualiza bolinhas, removendo ou não as originais
           setElements((prev) => {
             const base = removeOnCombine
               ? prev.filter((e) => e.id !== id && e.id !== o.id)
@@ -118,7 +108,7 @@ export default function App() {
             ];
           });
 
-          // log no feed
+          // Adiciona ao feed
           setFeed((f) => [
             {
               text: `${mover.nome} + ${o.nome} = ${result.nome}`,
@@ -131,28 +121,14 @@ export default function App() {
     [elements, removeOnCombine]
   );
 
-  // Reset ao estado inicial (com novas cores aleatórias)
+  // Reset sem duplicar manualmente
   const reset = () => {
-    setElements([
-      {
-        id: "ferro",
-        nome: "Ferro",
-        x: 100,
-        y: 100,
+    setElements(
+      initialElements.map((e) => ({
+        ...e,
         color: randomColor(),
-        image: "/img/ferro.png",
-        wiki: "https://pt.wikipedia.org/wiki/Ferro",
-      },
-      {
-        id: "carbono",
-        nome: "Carbono",
-        x: 250,
-        y: 200,
-        color: randomColor(),
-        image: "/img/carbono.png",
-        wiki: "https://pt.wikipedia.org/wiki/Carbono",
-      },
-    ]);
+      }))
+    );
     setFeed([]);
   };
 
@@ -160,7 +136,7 @@ export default function App() {
     <div className="App" style={{ position: "relative" }}>
       <PhysicsEngine elements={elements} setElements={setElements} />
 
-      {/* controles */}
+      {/* Controles e Dica */}
       <div
         style={{
           position: "absolute",
@@ -169,6 +145,7 @@ export default function App() {
           background: "#fff",
           padding: "8px",
           zIndex: 2,
+          border: "1px solid #ccc",
         }}
       >
         <label>
@@ -182,9 +159,12 @@ export default function App() {
         <button onClick={reset} style={{ marginLeft: 10 }}>
           Reset
         </button>
+        <div style={{ marginTop: 8, fontSize: "0.85em" }}>
+          💡 Clique em uma bolinha para abrir um link com mais informações.
+        </div>
       </div>
 
-      {/* conexões via SVG, sempre atrás */}
+      {/* Conexões */}
       <svg
         style={{
           position: "absolute",
@@ -224,7 +204,7 @@ export default function App() {
         )}
       </svg>
 
-      {/* bolinhas */}
+      {/* Bolinhas */}
       {elements.map((e) => (
         <Element
           key={e.id}
@@ -240,25 +220,30 @@ export default function App() {
         />
       ))}
 
-      {/* feed */}
+      {/* Histórico de Combinações */}
       <div
         style={{
           position: "absolute",
-          bottom: 10,
-          left: 10,
+          top: 10,
+          right: 10,
           background: "#fff",
           padding: "10px",
           border: "1px solid #ccc",
           fontFamily: "monospace",
           maxWidth: 300,
           fontSize: "0.9em",
-          zIndex: 2,
+          zIndex: 9999,
+          textAlign: "left",
         }}
       >
         <strong>Combinações:</strong>
-        {feed.map((item) => (
-          <div key={item.ts}>{item.text}</div>
-        ))}
+        {feed.length === 0 ? (
+          <div style={{ fontStyle: "italic", color: "#888" }}>
+            Nenhuma ainda.
+          </div>
+        ) : (
+          feed.map((item) => <div key={item.ts}>{item.text}</div>)
+        )}
       </div>
     </div>
   );

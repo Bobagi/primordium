@@ -1,9 +1,20 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Element from "./Element";
 import PhysicsEngine from "./PhysicsEngine";
 
-const combos = { "ferro+carbono": { id: "aco", nome: "Aço" } };
+const combos = {
+  "ferro+carbono": {
+    id: "aco",
+    nome: { pt: "Aço", en: "Steel" },
+    wiki: {
+      pt: "https://pt.wikipedia.org/wiki/A%C3%A7o",
+      en: "https://en.wikipedia.org/wiki/Steel",
+    },
+    image: "/img/steel.png",
+  },
+};
+
 const randomColor = () =>
   `#${Math.floor(Math.random() * 0xffffff)
     .toString(16)
@@ -12,19 +23,25 @@ const randomColor = () =>
 const initialElements = [
   {
     id: "ferro",
-    nome: "Ferro",
+    nome: { pt: "Ferro", en: "Iron" },
     x: 100,
     y: 100,
-    wiki: "https://pt.wikipedia.org/wiki/Ferro",
-    image: "/img/ferro.png",
+    wiki: {
+      pt: "https://pt.wikipedia.org/wiki/Ferro",
+      en: "https://en.wikipedia.org/wiki/Iron",
+    },
+    image: "/img/iron.png",
   },
   {
     id: "carbono",
-    nome: "Carbono",
+    nome: { pt: "Carbono", en: "Carbon" },
     x: 250,
     y: 200,
-    wiki: "https://pt.wikipedia.org/wiki/Carbono",
-    image: "/img/carbono.png",
+    wiki: {
+      pt: "https://pt.wikipedia.org/wiki/Carbono",
+      en: "https://en.wikipedia.org/wiki/Carbon",
+    },
+    image: "/img/carbon.png",
   },
 ];
 
@@ -84,6 +101,8 @@ export default function App() {
               {
                 id: `${result.id}-${Date.now()}`,
                 nome: result.nome,
+                wiki: result.wiki,
+                image: result.image,
                 x: (nx + o.x) / 2 + 60,
                 y: (ny + o.y) / 2,
                 color: mixColors(mover.color, o.color),
@@ -189,7 +208,17 @@ export default function App() {
       {elements.map((e) => (
         <Element
           key={e.id}
-          {...e}
+          id={e.id}
+          x={e.x}
+          y={e.y}
+          nome={e.nome[i18n.language] || e.nome.pt}
+          wiki={e.wiki?.[i18n.language]}
+          image={
+            typeof e.image === "string"
+              ? e.image
+              : e.image?.[i18n.language] || e.image?.pt
+          }
+          color={e.color}
           innerRef={(node) => (elementRefs.current[e.id] = node)}
           onMove={handleMove}
         />

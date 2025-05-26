@@ -161,9 +161,9 @@ export default function App() {
             title={t("bookTooltip")}
           >
             <img
-              src="/img/book-icon.png"
+              src="/img/book/book_cover.jpg"
               alt="Book"
-              style={{ width: 24, height: 24 }}
+              style={{ height: 120 }}
             />
           </a>
         </div>

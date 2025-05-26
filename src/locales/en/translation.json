@@ -21,6 +21,26 @@
       "name": "Steel",
       "description": "Steel is made by carburizing iron in simple furnaces. Under low-oxygen conditions, bury pieces of iron in charcoal and heat to infuse carbon. You can use clay molds to shape blades, tools and structural parts.",
       "wiki": "https://en.wikipedia.org/wiki/Steel"
+    },
+    "wood": {
+      "name": "Wood",
+      "description": "Harvest trees using stone axes. Split logs into planks for construction, or burn them for heat. Wood is versatile for building shelters, making tools, and creating fire.",
+      "wiki": "https://en.wikipedia.org/wiki/Wood"
+    },
+    "stone": {
+      "name": "Stone",
+      "description": "Collect stones from riverbeds or cliffs. Use them for tools, weapons, and construction. Stone can be shaped with other stones to create sharp edges or used as a solid building material.",
+      "wiki": "https://en.wikipedia.org/wiki/Stone"
+    },
+    "axe": {
+      "name": "Axe",
+      "description": "Craft an axe by attaching a sharp stone to a wooden handle. Use it for chopping wood, clearing paths, and building structures. An axe is essential for survival in the wilderness.",
+      "wiki": "https://en.wikipedia.org/wiki/Axe"
+    },
+    "shovel": {
+      "name": "Shovel",
+      "description": "Build a shovel by attaching a pointed stone to a wooden handle. Use it for digging, moving earth, and creating trenches. A shovel is useful for excavation and construction.",
+      "wiki": "https://en.wikipedia.org/wiki/Shovel"
     }
   }
 }

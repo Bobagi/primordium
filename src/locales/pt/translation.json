@@ -21,6 +21,26 @@
       "name": "Aço",
       "description": "O aço é feito carburizando ferro em fornos rudimentares. Em condições de baixo oxigênio, enterre pedaços de ferro com carvão e aqueça para incorporar carbono. Você pode usar moldes de barro para dar forma a lâminas, ferramentas e estruturas.",
       "wiki": "https://pt.wikipedia.org/wiki/A%C3%A7o"
+    },
+    "wood": {
+      "name": "Madeira",
+      "description": "Colha árvores usando machados de pedra. Corte toras em tábuas para construção ou queime-as para calor. A madeira é versátil para abrigos, ferramentas e fogo.",
+      "wiki": "https://pt.wikipedia.org/wiki/Madeira"
+    },
+    "stone": {
+      "name": "Pedra",
+      "description": "Colete pedras de leitos de rios ou penhascos. Use-as para ferramentas, armas e construção. A pedra pode ser moldada com outras pedras para criar arestas afiadas ou usada como material sólido.",
+      "wiki": "https://pt.wikipedia.org/wiki/Pedra"
+    },
+    "axe": {
+      "name": "Machado",
+      "description": "Crie um machado fixando uma pedra afiada a um cabo de madeira. Use-o para cortar madeira, abrir caminhos e construir estruturas. Um machado é essencial para a sobrevivência na natureza.",
+      "wiki": "https://pt.wikipedia.org/wiki/Machado"
+    },
+    "shovel": {
+      "name": "Pá",
+      "description": "Construa uma pá unindo uma pedra pontiaguda a um cabo de madeira. Use-a para cavar, mover terra e criar trincheiras. Uma pá é útil para escavação e construção.",
+      "wiki": "https://pt.wikipedia.org/wiki/P%C3%A1"
     }
   }
 }

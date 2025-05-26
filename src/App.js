@@ -14,7 +14,6 @@ export default function App() {
   const recentlyCombined = useRef(new Set());
   const elementRefs = useRef({});
   const [, forceUpdate] = useState(0);
-
   const canvasRef = useRef(null);
 
   useEffect(() => forceUpdate((n) => n + 1), [elements]);
@@ -47,13 +46,17 @@ export default function App() {
       elements
         .filter((e) => e.id !== id)
         .forEach((o) => {
-          const key = [id, o.id].sort().join("+");
+          const id1 = moveBall.baseId || moveBall.id;
+          const id2 = o.baseId || o.id;
+          const key = [id1, id2].sort().join("+");
+
+          const result = combos[key];
           const dist = Math.hypot(nx - o.x, ny - o.y);
-          const result = combos[`${id}+${o.id}`] || combos[`${o.id}+${id}`];
+
           if (!result || dist >= 60 || recentlyCombined.current.has(key))
             return;
 
-          registerCombo(id, o.id);
+          registerCombo(id1, id2);
 
           const newId = `${result.id}-${Date.now()}`;
           const newX = (nx + o.x) / 2 + 60;
@@ -77,11 +80,9 @@ export default function App() {
 
           setFeed((f) => [
             {
-              text: `${t(
-                `elements.${moveBall.baseId || moveBall.id}.name`
-              )} + ${t(`elements.${o.baseId || o.id}.name`)} = ${t(
-                `elements.${result.id}.name`
-              )}`,
+              text: `${t(`elements.${id1}.name`)} + ${t(
+                `elements.${id2}.name`
+              )} = ${t(`elements.${result.id}.name`)}`,
               ts: Date.now(),
             },
             ...f.slice(0, 4),
@@ -103,7 +104,7 @@ export default function App() {
     >
       <PhysicsEngine elements={elements} setElements={setElements} />
 
-      {/* Topo */}
+      {/* Header */}
       <div
         style={{
           display: "flex",
@@ -169,7 +170,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* bolinhas + conexões */}
+      {/* Bolinhas + Linhas */}
       <div ref={canvasRef} style={{ position: "relative", flex: 1 }}>
         <svg
           style={{
@@ -185,17 +186,27 @@ export default function App() {
           {elements.map((e1) =>
             elements.map((e2) => {
               if (e1.id >= e2.id) return null;
+
+              const id1 = e1.baseId || e1.id;
+              const id2 = e2.baseId || e2.id;
+              const comboKey = [id1, id2].sort().join("+");
+
+              if (!combos[comboKey]) return null;
+
               const n1 = elementRefs.current[e1.id];
               const n2 = elementRefs.current[e2.id];
               if (!n1 || !n2) return null;
+
               const r1 = n1.getBoundingClientRect();
               const r2 = n2.getBoundingClientRect();
               const offsetTop =
                 canvasRef.current?.getBoundingClientRect().top || 0;
+
               const x1 = r1.left + r1.width / 2;
               const y1 = r1.top + r1.height / 2 - offsetTop;
               const x2 = r2.left + r2.width / 2;
               const y2 = r2.top + r2.height / 2 - offsetTop;
+
               return (
                 <line
                   key={`${e1.id}-${e2.id}`}
@@ -232,7 +243,7 @@ export default function App() {
         })}
       </div>
 
-      {/* Feed final da tela */}
+      {/* Feed */}
       <div
         style={{
           background: "#fff",

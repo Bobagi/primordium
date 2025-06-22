@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  primordium:
+    build: .
+    container_name: primordium
+    ports:
+      - "3052:80"
+    restart: always

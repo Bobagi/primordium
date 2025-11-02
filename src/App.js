@@ -102,8 +102,71 @@ export default function App() {
     <div className="App">
       <PhysicsEngine elements={elements} setElements={setElements} />
 
-      <div className="app-shell">
-        <header className="app-header">
+      <div ref={canvasRef} className="playfield">
+        <svg className="playfield-overlay">
+          {elements.map((e1) =>
+            elements.map((e2) => {
+              if (e1.id >= e2.id) return null;
+
+              const id1 = e1.baseId || e1.id;
+              const id2 = e2.baseId || e2.id;
+              const comboKey = [id1, id2].sort().join("+");
+
+              if (!combos[comboKey]) return null;
+
+              const n1 = elementRefs.current[e1.id];
+              const n2 = elementRefs.current[e2.id];
+              if (!n1 || !n2) return null;
+
+              const r1 = n1.getBoundingClientRect();
+              const r2 = n2.getBoundingClientRect();
+              const offsetTop =
+                canvasRef.current?.getBoundingClientRect().top || 0;
+
+              const x1 = r1.left + r1.width / 2;
+              const y1 = r1.top + r1.height / 2 - offsetTop;
+              const x2 = r2.left + r2.width / 2;
+              const y2 = r2.top + r2.height / 2 - offsetTop;
+
+              return (
+                <line
+                  key={`${e1.id}-${e2.id}`}
+                  className="connection"
+                  x1={x1}
+                  y1={y1}
+                  x2={x2}
+                  y2={y2}
+                  stroke="#94a3b8"
+                  strokeWidth={1.5}
+                  strokeLinecap="round"
+                />
+              );
+            })
+          )}
+        </svg>
+
+        {elements.map((e) => {
+          const baseKey = e.baseId || e.id;
+          return (
+            <Element
+              key={e.id}
+              id={e.id}
+              x={e.x}
+              y={e.y}
+              name={t(`elements.${baseKey}.name`)}
+              wiki={t(`elements.${baseKey}.wiki`)}
+              description={t(`elements.${baseKey}.description`)}
+              image={e.image}
+              color={e.color}
+              innerRef={(node) => (elementRefs.current[e.id] = node)}
+              onMove={handleMove}
+            />
+          );
+        })}
+      </div>
+
+      <header className="hud-bar hud-bar--top">
+        <div className="app-header">
           <div className="toolbar-card settings-card">
             <div className="settings-card__heading">
               <span className="eyebrow">{t("controlsTitle")}</span>
@@ -190,87 +253,22 @@ export default function App() {
               </li>
             </ul>
           </div>
-        </header>
-
-        <div ref={canvasRef} className="playfield">
-          <svg className="playfield-overlay">
-            {elements.map((e1) =>
-              elements.map((e2) => {
-                if (e1.id >= e2.id) return null;
-
-                const id1 = e1.baseId || e1.id;
-                const id2 = e2.baseId || e2.id;
-                const comboKey = [id1, id2].sort().join("+");
-
-                if (!combos[comboKey]) return null;
-
-                const n1 = elementRefs.current[e1.id];
-                const n2 = elementRefs.current[e2.id];
-                if (!n1 || !n2) return null;
-
-                const r1 = n1.getBoundingClientRect();
-                const r2 = n2.getBoundingClientRect();
-                const offsetTop =
-                  canvasRef.current?.getBoundingClientRect().top || 0;
-
-                const x1 = r1.left + r1.width / 2;
-                const y1 = r1.top + r1.height / 2 - offsetTop;
-                const x2 = r2.left + r2.width / 2;
-                const y2 = r2.top + r2.height / 2 - offsetTop;
-
-                return (
-                  <line
-                    key={`${e1.id}-${e2.id}`}
-                    className="connection"
-                    x1={x1}
-                    y1={y1}
-                    x2={x2}
-                    y2={y2}
-                    stroke="#94a3b8"
-                    strokeWidth={1.5}
-                    strokeLinecap="round"
-                  />
-                );
-              })
-            )}
-          </svg>
-
-          {elements.map((e) => {
-            const baseKey = e.baseId || e.id;
-            return (
-              <Element
-                key={e.id}
-                id={e.id}
-                x={e.x}
-                y={e.y}
-                name={t(`elements.${baseKey}.name`)}
-                wiki={t(`elements.${baseKey}.wiki`)}
-                description={t(`elements.${baseKey}.description`)}
-                image={e.image}
-                color={e.color}
-                innerRef={(node) => (elementRefs.current[e.id] = node)}
-                onMove={handleMove}
-              />
-            );
-          })}
         </div>
+      </header>
 
-        <section className="activity-feed" aria-live="polite">
-          <div className="activity-feed__title">{t("combinations")}</div>
-          <ul className="activity-feed__list">
-            {feed.length === 0 && (
-              <li className="activity-feed__item activity-feed__item--empty">
-                —
-              </li>
-            )}
-            {feed.map((item) => (
-              <li className="activity-feed__item" key={item.ts}>
-                {item.text}
-              </li>
-            ))}
-          </ul>
-        </section>
-      </div>
+      <section className="hud-bar hud-bar--bottom activity-feed" aria-live="polite">
+        <div className="activity-feed__title">{t("combinations")}</div>
+        <ul className="activity-feed__list">
+          {feed.length === 0 && (
+            <li className="activity-feed__item activity-feed__item--empty">—</li>
+          )}
+          {feed.map((item) => (
+            <li className="activity-feed__item" key={item.ts}>
+              {item.text}
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

@@ -11,8 +11,10 @@ const Element = ({
   wiki,
   onMove,
   innerRef,
+  offset = { x: 0, y: 0 },
 }) => {
   const ref = useRef(null);
+  const offsetRef = useRef(offset);
   const clickStart = useRef({ x: 0, y: 0 });
 
   const fontSize = 14;
@@ -28,9 +30,14 @@ const Element = ({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    const applyTransform = (node, nx, ny) => {
+      const currentOffset = offsetRef.current;
+      node.style.transform = `translate(${nx + currentOffset.x}px, ${ny + currentOffset.y}px)`;
+    };
+
     el.setAttribute("data-x", x);
     el.setAttribute("data-y", y);
-    el.style.transform = `translate(${x}px, ${y}px)`;
+    applyTransform(el, x, y);
     if (innerRef) innerRef(el);
 
     interact(el).draggable({
@@ -39,7 +46,7 @@ const Element = ({
           const t = event.target;
           const nx = (parseFloat(t.getAttribute("data-x")) || 0) + event.dx;
           const ny = (parseFloat(t.getAttribute("data-y")) || 0) + event.dy;
-          t.style.transform = `translate(${nx}px, ${ny}px)`;
+          applyTransform(t, nx, ny);
           t.setAttribute("data-x", nx);
           t.setAttribute("data-y", ny);
           onMove(id, nx, ny);
@@ -61,6 +68,15 @@ const Element = ({
     });
   }, [id, x, y, onMove, innerRef, color]);
 
+  useEffect(() => {
+    offsetRef.current = offset;
+    const node = ref.current;
+    if (!node) return;
+    const nx = parseFloat(node.getAttribute("data-x")) || 0;
+    const ny = parseFloat(node.getAttribute("data-y")) || 0;
+    node.style.transform = `translate(${nx + offset.x}px, ${ny + offset.y}px)`;
+  }, [offset]);
+
   return (
     <div
       ref={ref}
@@ -77,7 +93,7 @@ const Element = ({
         position: "absolute",
         width: `${size}px`,
         height: `${size}px`,
-        transform: `translate(${x}px, ${y}px)`,
+        transform: `translate(${x + offset.x}px, ${y + offset.y}px)`,
         zIndex: 2,
         cursor: "grab",
         userSelect: "none",

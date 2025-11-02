@@ -7,34 +7,35 @@
 }
 
 .hud-bar {
+  --hud-margin: clamp(12px, 3vw, 36px);
   position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(1040px, calc(100vw - 32px));
-  padding: clamp(14px, 3vw, 22px);
+  left: var(--hud-margin);
+  width: min(960px, calc(100vw - var(--hud-margin) - clamp(16px, 4vw, 48px)));
+  max-width: 960px;
+  padding: clamp(10px, 2.5vw, 18px);
   background: rgba(15, 23, 42, 0.82);
-  border-radius: 24px;
+  border-radius: 18px;
   border: 1px solid rgba(148, 163, 184, 0.24);
-  box-shadow: 0 30px 60px rgba(2, 6, 23, 0.45);
+  box-shadow: 0 20px 50px rgba(2, 6, 23, 0.45);
   backdrop-filter: blur(18px);
   z-index: 5;
   pointer-events: auto;
 }
 
 .hud-bar--top {
-  top: calc(env(safe-area-inset-top, 0px) + clamp(12px, 3vw, 22px));
-  max-height: min(340px, 60vh);
+  top: calc(env(safe-area-inset-top, 0px) + clamp(10px, 2.5vw, 18px));
+  max-height: min(280px, 55vh);
   overflow-y: auto;
 }
 
 .hud-bar--bottom {
-  bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(12px, 3vw, 22px));
+  bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(10px, 2.5vw, 18px));
 }
 
 .app-header {
   display: grid;
-  gap: clamp(12px, 2vw, 20px);
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(10px, 2vw, 18px);
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   align-items: stretch;
   width: 100%;
 }
@@ -42,16 +43,16 @@
 .toolbar-card {
   display: flex;
   flex-direction: column;
-  gap: clamp(12px, 2vw, 16px);
-  padding: clamp(18px, 2vw, 24px);
+  gap: clamp(10px, 2vw, 14px);
+  padding: clamp(14px, 2vw, 18px);
   background: linear-gradient(
     135deg,
     rgba(30, 41, 59, 0.95),
     rgba(15, 23, 42, 0.85)
   );
-  border-radius: 22px;
+  border-radius: 16px;
   border: 1px solid rgba(148, 163, 184, 0.25);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.32);
 }
 
 .settings-card__heading {
@@ -70,7 +71,7 @@
 
 .brand-title {
   margin: 0;
-  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-size: clamp(1.25rem, 2.6vw, 1.8rem);
   font-weight: 700;
   color: #f8fafc;
 }
@@ -84,15 +85,15 @@
 .settings-card__controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
   align-items: flex-end;
 }
 
 .control-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-width: 180px;
+  gap: 6px;
+  min-width: 160px;
   flex: 1;
 }
 
@@ -123,12 +124,12 @@
 .input-wrapper select {
   width: 100%;
   appearance: none;
-  background: rgba(15, 118, 246, 0.15);
+  background: rgba(15, 118, 246, 0.12);
   color: #f8fafc;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  padding: 10px 14px;
-  border-radius: 14px;
-  font-size: 0.95rem;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
   font-weight: 500;
   box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.1);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
@@ -148,10 +149,10 @@
 .control-checkbox {
   flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background: rgba(148, 163, 184, 0.12);
-  padding: 10px 14px;
-  border-radius: 16px;
+  padding: 8px 12px;
+  border-radius: 14px;
   border: 1px solid transparent;
   transition: border-color 0.2s ease, background 0.2s ease;
   flex: 0 0 auto;
@@ -179,9 +180,9 @@
 
 .primary-button {
   margin-left: auto;
-  padding: 12px 20px;
-  border-radius: 16px;
-  border: 1px solid rgba(56, 189, 248, 0.4);
+  padding: 10px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(56, 189, 248, 0.38);
   background: linear-gradient(
     135deg,
     rgba(59, 130, 246, 0.85),
@@ -217,13 +218,13 @@
   border-radius: 18px;
   overflow: hidden;
   background: rgba(148, 163, 184, 0.12);
-  padding: 12px;
+  padding: 10px;
   border: 1px solid rgba(148, 163, 184, 0.2);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .book-card__cover img {
-  width: 120px;
+  width: 108px;
   height: auto;
   border-radius: 12px;
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.45);
@@ -239,8 +240,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 16px;
-  border-radius: 14px;
+  padding: 8px 14px;
+  border-radius: 12px;
   border: 1px solid rgba(148, 163, 184, 0.4);
   color: #f8fafc;
   text-decoration: none;
@@ -261,16 +262,16 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .social-link {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 16px;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
   text-decoration: none;
   color: #f8fafc;
   background: rgba(15, 118, 246, 0.15);
@@ -297,6 +298,12 @@
     rgba(2, 6, 23, 0.95)
   );
   z-index: 0;
+  cursor: grab;
+  touch-action: none;
+}
+
+.playfield.is-panning {
+  cursor: grabbing;
 }
 
 .playfield-overlay {
@@ -316,23 +323,23 @@
     rgba(30, 41, 59, 0.95),
     rgba(15, 23, 42, 0.85)
   );
-  border-radius: 22px;
+  border-radius: 16px;
   border: 1px solid rgba(148, 163, 184, 0.25);
-  padding: clamp(18px, 3vw, 24px);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+  padding: clamp(14px, 3vw, 18px);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.32);
   font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
   width: 100%;
-  max-height: min(220px, 38vh);
+  max-height: min(180px, 32vh);
   overflow-y: auto;
 }
 
 .activity-feed__title {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.28em;
   color: rgba(148, 163, 184, 0.7);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   font-weight: 600;
 }
 
@@ -346,8 +353,8 @@
 }
 
 .activity-feed__item {
-  padding: 10px 14px;
-  border-radius: 14px;
+  padding: 8px 12px;
+  border-radius: 12px;
   background: rgba(15, 118, 246, 0.08);
   border: 1px solid rgba(56, 189, 248, 0.25);
   color: #e2e8f0;
@@ -376,8 +383,10 @@
   }
 
   .hud-bar {
-    width: calc(100vw - 24px);
-    padding: 16px;
+    width: calc(100vw - 20px);
+    max-width: none;
+    padding: 14px;
+    left: 10px;
   }
 
   .hud-bar--top {

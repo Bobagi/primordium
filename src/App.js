@@ -16,6 +16,8 @@ export default function App() {
   const elementRefs = useRef({});
   const [, forceUpdate] = useState(0);
   const canvasRef = useRef(null);
+  const [viewOffset, setViewOffset] = useState({ x: 0, y: 0 });
+  const panState = useRef(null);
 
   useEffect(() => forceUpdate((n) => n + 1), [elements]);
 
@@ -96,13 +98,59 @@ export default function App() {
   const reset = () => {
     setElements(createInitialElements());
     setFeed([]);
+    setViewOffset({ x: 0, y: 0 });
+  };
+
+  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+  const handlePanStart = (event) => {
+    if (!canvasRef.current || event.target.closest(".elemento")) return;
+
+    panState.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      offset: { ...viewOffset },
+    };
+
+    canvasRef.current.classList.add("is-panning");
+    canvasRef.current.setPointerCapture?.(event.pointerId);
+  };
+
+  const handlePanMove = (event) => {
+    if (!panState.current || panState.current.pointerId !== event.pointerId)
+      return;
+
+    const dx = event.clientX - panState.current.startX;
+    const dy = event.clientY - panState.current.startY;
+
+    setViewOffset({
+      x: clamp(panState.current.offset.x + dx, -160, 160),
+      y: clamp(panState.current.offset.y + dy, -160, 160),
+    });
+  };
+
+  const handlePanEnd = (event) => {
+    if (!panState.current || panState.current.pointerId !== event.pointerId)
+      return;
+
+    canvasRef.current?.classList.remove("is-panning");
+    canvasRef.current?.releasePointerCapture?.(event.pointerId);
+    panState.current = null;
   };
 
   return (
     <div className="App">
       <PhysicsEngine elements={elements} setElements={setElements} />
 
-      <div ref={canvasRef} className="playfield">
+      <div
+        ref={canvasRef}
+        className="playfield"
+        onPointerDown={handlePanStart}
+        onPointerMove={handlePanMove}
+        onPointerUp={handlePanEnd}
+        onPointerCancel={handlePanEnd}
+      >
         <svg className="playfield-overlay">
           {elements.map((e1) =>
             elements.map((e2) => {
@@ -158,6 +206,7 @@ export default function App() {
               description={t(`elements.${baseKey}.description`)}
               image={e.image}
               color={e.color}
+              offset={viewOffset}
               innerRef={(node) => (elementRefs.current[e.id] = node)}
               onMove={handleMove}
             />

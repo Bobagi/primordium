@@ -4,6 +4,7 @@ import Element from "./Element";
 import PhysicsEngine from "./PhysicsEngine";
 import { combos } from "./data/elements";
 import { createInitialElements } from "./utils/elementFactory";
+import "./App.css";
 
 export default function App() {
   const { t, i18n } = useTranslation();
@@ -98,166 +99,177 @@ export default function App() {
   };
 
   return (
-    <div
-      className="App"
-      style={{ display: "flex", flexDirection: "column", height: "100vh" }}
-    >
+    <div className="App">
       <PhysicsEngine elements={elements} setElements={setElements} />
 
-      {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          gap: "12px",
-          padding: "8px",
-          fontSize: "0.9em",
-          zIndex: 2,
-        }}
-      >
-        <div
-          style={{
-            background: "#fff",
-            padding: "8px",
-            border: "1px solid #ccc",
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          <select
-            value={i18n.language}
-            onChange={(e) => i18n.changeLanguage(e.target.value)}
-          >
-            <option value="pt">Português</option>
-            <option value="en">English</option>
-          </select>
-          <label>
-            <input
-              type="checkbox"
-              checked={removeOnCombine}
-              onChange={(e) => setRemoveOnCombine(e.target.checked)}
-            />{" "}
-            {t("removeOriginals")}
-          </label>
-          <button onClick={reset}>{t("reset")}</button>
-          <div style={{ color: "#444", flexBasis: "100%" }}>
-            {t("tipClick")}
-          </div>
-        </div>
-        <div
-          style={{
-            background: "#fff",
-            padding: "8px",
-            border: "1px solid #ccc",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <a
-            href={t("bookLink")}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={t("bookTooltip")}
-          >
-            <img
-              src="/img/book/book_cover.jpg"
-              alt="Book"
-              style={{ height: 120 }}
-            />
-          </a>
-        </div>
-      </div>
-
-      {/* Bolinhas + Linhas */}
-      <div ref={canvasRef} style={{ position: "relative", flex: 1 }}>
-        <svg
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-            zIndex: 1,
-          }}
-        >
-          {elements.map((e1) =>
-            elements.map((e2) => {
-              if (e1.id >= e2.id) return null;
-
-              const id1 = e1.baseId || e1.id;
-              const id2 = e2.baseId || e2.id;
-              const comboKey = [id1, id2].sort().join("+");
-
-              if (!combos[comboKey]) return null;
-
-              const n1 = elementRefs.current[e1.id];
-              const n2 = elementRefs.current[e2.id];
-              if (!n1 || !n2) return null;
-
-              const r1 = n1.getBoundingClientRect();
-              const r2 = n2.getBoundingClientRect();
-              const offsetTop =
-                canvasRef.current?.getBoundingClientRect().top || 0;
-
-              const x1 = r1.left + r1.width / 2;
-              const y1 = r1.top + r1.height / 2 - offsetTop;
-              const x2 = r2.left + r2.width / 2;
-              const y2 = r2.top + r2.height / 2 - offsetTop;
-
-              return (
-                <line
-                  key={`${e1.id}-${e2.id}`}
-                  className="connection"
-                  x1={x1}
-                  y1={y1}
-                  x2={x2}
-                  y2={y2}
-                  stroke="gray"
-                  strokeWidth={1}
+      <div className="app-shell">
+        <header className="app-header">
+          <div className="toolbar-card settings-card">
+            <div className="settings-card__heading">
+              <span className="eyebrow">{t("controlsTitle")}</span>
+              <h1 className="brand-title">Primordium</h1>
+              <p className="tip-text">{t("tipClick")}</p>
+            </div>
+            <div className="settings-card__controls">
+              <div className="control-group">
+                <label className="control-label" htmlFor="language-select">
+                  {t("language")}
+                </label>
+                <div className="input-wrapper">
+                  <select
+                    id="language-select"
+                    value={i18n.language}
+                    onChange={(e) => i18n.changeLanguage(e.target.value)}
+                  >
+                    <option value="pt">Português</option>
+                    <option value="en">English</option>
+                  </select>
+                </div>
+              </div>
+              <div className="control-group control-checkbox">
+                <input
+                  id="remove-originals-toggle"
+                  type="checkbox"
+                  checked={removeOnCombine}
+                  onChange={(e) => setRemoveOnCombine(e.target.checked)}
                 />
-              );
-            })
-          )}
-        </svg>
+                <label htmlFor="remove-originals-toggle">
+                  {t("removeOriginals")}
+                </label>
+              </div>
+              <button className="primary-button" onClick={reset}>
+                {t("reset")}
+              </button>
+            </div>
+          </div>
+          <div className="toolbar-card book-card">
+            <span className="eyebrow">{t("bookTooltip")}</span>
+            <a
+              className="book-card__cover"
+              href={t("bookLink")}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={t("bookTooltip")}
+            >
+              <img src="/img/book/book_cover.jpg" alt="Book" loading="lazy" />
+            </a>
+            <a
+              className="ghost-button"
+              href={t("bookLink")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("buyNow")}
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <div className="toolbar-card social-card">
+            <span className="eyebrow">{t("followUs")}</span>
+            <ul className="social-list">
+              <li>
+                <a
+                  className="social-link"
+                  href="https://github.com/Bobagi/primordium"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t("social.github")}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  className="social-link"
+                  href="https://www.linkedin.com/in/gustavoaperin/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t("social.linkedin")}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </header>
 
-        {elements.map((e) => {
-          const baseKey = e.baseId || e.id;
-          return (
-            <Element
-              key={e.id}
-              id={e.id}
-              x={e.x}
-              y={e.y}
-              name={t(`elements.${baseKey}.name`)}
-              wiki={t(`elements.${baseKey}.wiki`)}
-              description={t(`elements.${baseKey}.description`)}
-              image={e.image}
-              color={e.color}
-              innerRef={(node) => (elementRefs.current[e.id] = node)}
-              onMove={handleMove}
-            />
-          );
-        })}
-      </div>
+        <div ref={canvasRef} className="playfield">
+          <svg className="playfield-overlay">
+            {elements.map((e1) =>
+              elements.map((e2) => {
+                if (e1.id >= e2.id) return null;
 
-      {/* Feed */}
-      <div
-        style={{
-          background: "#fff",
-          padding: "10px",
-          borderTop: "1px solid #ccc",
-          fontFamily: "monospace",
-          fontSize: "0.9em",
-          zIndex: 2,
-        }}
-      >
-        <strong>{t("combinations")}:</strong>
-        {feed.map((item) => (
-          <div key={item.ts}>{item.text}</div>
-        ))}
+                const id1 = e1.baseId || e1.id;
+                const id2 = e2.baseId || e2.id;
+                const comboKey = [id1, id2].sort().join("+");
+
+                if (!combos[comboKey]) return null;
+
+                const n1 = elementRefs.current[e1.id];
+                const n2 = elementRefs.current[e2.id];
+                if (!n1 || !n2) return null;
+
+                const r1 = n1.getBoundingClientRect();
+                const r2 = n2.getBoundingClientRect();
+                const offsetTop =
+                  canvasRef.current?.getBoundingClientRect().top || 0;
+
+                const x1 = r1.left + r1.width / 2;
+                const y1 = r1.top + r1.height / 2 - offsetTop;
+                const x2 = r2.left + r2.width / 2;
+                const y2 = r2.top + r2.height / 2 - offsetTop;
+
+                return (
+                  <line
+                    key={`${e1.id}-${e2.id}`}
+                    className="connection"
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke="#94a3b8"
+                    strokeWidth={1.5}
+                    strokeLinecap="round"
+                  />
+                );
+              })
+            )}
+          </svg>
+
+          {elements.map((e) => {
+            const baseKey = e.baseId || e.id;
+            return (
+              <Element
+                key={e.id}
+                id={e.id}
+                x={e.x}
+                y={e.y}
+                name={t(`elements.${baseKey}.name`)}
+                wiki={t(`elements.${baseKey}.wiki`)}
+                description={t(`elements.${baseKey}.description`)}
+                image={e.image}
+                color={e.color}
+                innerRef={(node) => (elementRefs.current[e.id] = node)}
+                onMove={handleMove}
+              />
+            );
+          })}
+        </div>
+
+        <section className="activity-feed" aria-live="polite">
+          <div className="activity-feed__title">{t("combinations")}</div>
+          <ul className="activity-feed__list">
+            {feed.length === 0 && (
+              <li className="activity-feed__item activity-feed__item--empty">
+                —
+              </li>
+            )}
+            {feed.map((item) => (
+              <li className="activity-feed__item" key={item.ts}>
+                {item.text}
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
     </div>
   );

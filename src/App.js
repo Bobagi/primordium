@@ -164,9 +164,42 @@ export default function App() {
             <img
               src="/img/book/book_cover.jpg"
               alt="Book"
+              loading="lazy"
               style={{ height: 120 }}
             />
           </a>
+        </div>
+        <div
+          style={{
+            background: "#fff",
+            padding: "8px",
+            border: "1px solid #ccc",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: "6px",
+            minWidth: "160px",
+          }}
+        >
+          <span style={{ fontWeight: "bold", color: "#444" }}>
+            {t("followUs")}
+          </span>
+          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+            <a
+              href="https://github.com/Bobagi/primordium"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("social.github")}
+            </a>
+            <a
+              href="https://www.linkedin.com/company/kairos-labs"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("social.linkedin")}
+            </a>
+          </div>
         </div>
       </div>
 

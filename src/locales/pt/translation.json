@@ -6,6 +6,11 @@
   "reset": "Resetar",
   "tipClick": "💡 Dica: clique em uma bolinha para abrir um link com mais informações.",
   "combinations": "Combinações",
+  "followUs": "Siga-nos",
+  "social": {
+    "github": "GitHub",
+    "linkedin": "LinkedIn"
+  },
   "elements": {
     "iron": {
       "name": "Ferro",

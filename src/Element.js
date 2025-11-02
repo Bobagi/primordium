@@ -105,6 +105,7 @@ const Element = ({
           <img
             src={image}
             alt={name}
+            loading="lazy"
             style={{
               maxWidth: "60%",
               maxHeight: "60%",

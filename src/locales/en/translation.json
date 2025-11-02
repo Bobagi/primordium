@@ -6,6 +6,11 @@
   "reset": "Reset",
   "tipClick": "💡 Tip: click a circle to open an informative link.",
   "combinations": "Combinations",
+  "followUs": "Follow us",
+  "social": {
+    "github": "GitHub",
+    "linkedin": "LinkedIn"
+  },
   "elements": {
     "iron": {
       "name": "Iron",

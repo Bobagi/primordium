@@ -58,6 +58,7 @@ const Element = ({
           trail.style.left = `${rect.left + rect.width / 2}px`;
           trail.style.top = `${rect.top + rect.height / 2}px`;
           trail.style.color = color;
+          trail.style.zIndex = "1";
           const ang = Math.random() * 2 * Math.PI;
           const dist = 10 + Math.random() * 10;
           trail.style.setProperty("--dx", `${Math.cos(ang) * dist}px`);

@@ -18,6 +18,10 @@ export default function App() {
   const [elements, setElements] = useState(() => createInitialElements());
   const [feed, setFeed] = useState([]);
   const [removeOnCombine, setRemoveOnCombine] = useState(true);
+  const [isFeedOpen, setFeedOpen] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.innerWidth > 768;
+  });
   const recentlyCombined = useRef(new Set());
   const elementRefs = useRef({});
   const [, forceUpdate] = useState(0);
@@ -55,6 +59,24 @@ export default function App() {
   }, []);
 
   useEffect(() => forceUpdate((n) => n + 1), [elements]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setFeedOpen(true);
+      } else {
+        setFeedOpen(false);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const registerCombo = (a, b) => {
     const key = [a, b].sort().join("+");
@@ -251,28 +273,23 @@ export default function App() {
 
       <header className="hud-topbar" aria-label={t("controlsTitle")}>
         <div ref={headerRef} className="hud-topbar__content">
-          <div className="hud-topbar__brand">
-            <a
-              className="hud-topbar__book"
-              href={t("bookLink")}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                className="hud-topbar__book-art"
-                src="/img/book/book_cover.jpg"
-                alt={t("bookTooltip")}
-              />
-              <div className="hud-topbar__brand-copy">
-                <span className="hud-topbar__logo">Primordium</span>
-                <span className="hud-topbar__book-cta">
-                  {t("buyNow")}
-                  <span aria-hidden="true">↗</span>
-                </span>
-              </div>
-            </a>
+          <div className="hud-topbar__left">
+            <span className="hud-topbar__logo">Primordium</span>
             <span className="hud-topbar__tip">{t("tipClick")}</span>
           </div>
+          <a
+            className="hud-topbar__book"
+            href={t("bookLink")}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              className="hud-topbar__book-art"
+              src="/img/book/book_cover.jpg"
+              alt={t("bookTooltip")}
+            />
+            <span className="sr-only">{t("buyNow")}</span>
+          </a>
           <div className="hud-topbar__group hud-topbar__controls">
             <div className="hud-topbar__item hud-topbar__language">
               <span className="hud-topbar__label">{t("language")}</span>
@@ -320,7 +337,22 @@ export default function App() {
         </div>
       </header>
 
-      <aside className="activity-sidebar" aria-live="polite">
+      <button
+        type="button"
+        className={`activity-toggle${isFeedOpen ? " is-open" : ""}`}
+        onClick={() => setFeedOpen((open) => !open)}
+        aria-expanded={isFeedOpen}
+        aria-controls="activity-feed"
+      >
+        <span aria-hidden="true">🧪</span>
+        <span>{t("combinations")}</span>
+      </button>
+
+      <aside
+        id="activity-feed"
+        className={`activity-sidebar${isFeedOpen ? " is-open" : ""}`}
+        aria-live="polite"
+      >
         <div className="activity-sidebar__header">{t("combinations")}</div>
         <ul className="activity-sidebar__list">
           {feed.length === 0 && (

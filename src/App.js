@@ -305,7 +305,10 @@ export default function App() {
         </div>
       </header>
 
-      <section className="hud-bar hud-bar--bottom activity-feed" aria-live="polite">
+      <section
+        className="hud-bar hud-bar--bottom hud-bar--side activity-feed"
+        aria-live="polite"
+      >
         <div className="activity-feed__title">{t("combinations")}</div>
         <ul className="activity-feed__list">
           {feed.length === 0 && (

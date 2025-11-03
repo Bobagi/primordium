@@ -1,5 +1,5 @@
 :root {
-  --hud-height: 72px;
+  --hud-height: 64px;
 }
 
 .App {
@@ -12,30 +12,93 @@
 
 .hud-topbar {
   position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  top: env(safe-area-inset-top, 0px);
   left: 0;
   right: 0;
   display: flex;
-  justify-content: flex-start;
-  padding: 0 clamp(12px, 3vw, 32px);
+  justify-content: center;
+  padding: 0;
   z-index: 5;
   pointer-events: none;
 }
 
 .hud-topbar__content {
-  width: min(1100px, 100%);
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: clamp(8px, 2vw, 18px);
-  padding: 8px 14px;
-  background: rgba(15, 23, 42, 0.86);
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(2, 6, 23, 0.35);
-  backdrop-filter: blur(14px);
+  justify-content: space-between;
+  gap: clamp(10px, 2vw, 20px);
+  padding: 10px clamp(16px, 3vw, 32px);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.75));
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 12px 32px rgba(2, 6, 23, 0.4);
+  backdrop-filter: blur(16px);
   pointer-events: auto;
   flex-wrap: wrap;
-  margin-right: auto;
+}
+
+.hud-topbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 18px);
+  flex: 0 0 auto;
+}
+
+.hud-topbar__book {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 14px 6px 6px;
+  border-radius: 999px;
+  text-decoration: none;
+  background: rgba(34, 211, 238, 0.18);
+  border: 1px solid rgba(125, 211, 252, 0.5);
+  box-shadow: 0 10px 24px rgba(14, 165, 233, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.hud-topbar__book:hover {
+  transform: translateY(-1px);
+  border-color: rgba(125, 211, 252, 0.8);
+  box-shadow: 0 16px 30px rgba(14, 165, 233, 0.38);
+}
+
+.hud-topbar__book-art {
+  width: 44px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(2, 6, 23, 0.5);
+}
+
+.hud-topbar__brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #f8fafc;
+}
+
+.hud-topbar__logo {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hud-topbar__book-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hud-topbar__tip {
+  font-size: 0.7rem;
+  color: rgba(226, 232, 240, 0.68);
+  white-space: nowrap;
 }
 
 .hud-topbar__group {
@@ -43,27 +106,6 @@
   align-items: center;
   gap: clamp(8px, 1.4vw, 16px);
   flex-wrap: wrap;
-}
-
-.hud-topbar__brand {
-  flex: 0 0 auto;
-  gap: 10px;
-  padding-right: clamp(4px, 1vw, 12px);
-  border-right: 1px solid rgba(148, 163, 184, 0.25);
-}
-
-.hud-topbar__logo {
-  font-size: 0.95rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #f8fafc;
-}
-
-.hud-topbar__tip {
-  font-size: 0.7rem;
-  color: rgba(226, 232, 240, 0.65);
-  white-space: nowrap;
 }
 
 .hud-topbar__controls {
@@ -177,15 +219,9 @@
   box-shadow: 0 12px 26px rgba(59, 130, 246, 0.25);
 }
 
-.hud-topbar__book {
-  background: rgba(34, 211, 238, 0.16);
-  border-color: rgba(34, 211, 238, 0.45);
-  color: #f8fafc;
-}
-
 .activity-sidebar {
   position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 12px + var(--hud-height, 72px));
+  top: calc(env(safe-area-inset-top, 0px) + var(--hud-height, 64px) + 24px);
   right: clamp(12px, 3vw, 36px);
   bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
   width: min(280px, calc(100vw - 24px));
@@ -255,7 +291,7 @@
   }
 
   .hud-topbar__brand {
-    border-right: none;
+    flex: 1 1 100%;
   }
 }
 
@@ -276,6 +312,15 @@
 @media (max-width: 600px) {
   .hud-topbar__content {
     padding: 10px 12px;
+  }
+
+  .hud-topbar__book {
+    padding: 4px 10px 4px 4px;
+  }
+
+  .hud-topbar__book-art {
+    width: 36px;
+    height: 48px;
   }
 
   .hud-topbar__group {

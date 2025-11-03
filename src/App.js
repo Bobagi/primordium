@@ -251,8 +251,26 @@ export default function App() {
 
       <header className="hud-topbar" aria-label={t("controlsTitle")}>
         <div ref={headerRef} className="hud-topbar__content">
-          <div className="hud-topbar__group hud-topbar__brand">
-            <span className="hud-topbar__logo">Primordium</span>
+          <div className="hud-topbar__brand">
+            <a
+              className="hud-topbar__book"
+              href={t("bookLink")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                className="hud-topbar__book-art"
+                src="/img/book/book_cover.jpg"
+                alt={t("bookTooltip")}
+              />
+              <div className="hud-topbar__brand-copy">
+                <span className="hud-topbar__logo">Primordium</span>
+                <span className="hud-topbar__book-cta">
+                  {t("buyNow")}
+                  <span aria-hidden="true">↗</span>
+                </span>
+              </div>
+            </a>
             <span className="hud-topbar__tip">{t("tipClick")}</span>
           </div>
           <div className="hud-topbar__group hud-topbar__controls">
@@ -280,15 +298,6 @@ export default function App() {
             </button>
           </div>
           <div className="hud-topbar__group hud-topbar__links">
-            <a
-              className="hud-topbar__link hud-topbar__book"
-              href={t("bookLink")}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t("buyNow")}
-              <span aria-hidden="true">↗</span>
-            </a>
             <a
               className="hud-topbar__link"
               href="https://github.com/Bobagi/primordium"

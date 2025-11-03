@@ -2,25 +2,25 @@ export const initialElements = [
   {
     id: "iron",
     x: 100,
-    y: 100,
+    y: 220,
     image: "/img/iron.png",
   },
   {
     id: "carbon",
     x: 250,
-    y: 200,
+    y: 320,
     image: "/img/carbon.png",
   },
   {
     id: "wood",
     x: 400,
-    y: 150,
+    y: 260,
     image: "/img/carbon.png",
   },
   {
     id: "stone",
     x: 550,
-    y: 100,
+    y: 220,
     image: "/img/carbon.png",
   },
 ];

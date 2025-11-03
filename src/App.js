@@ -215,92 +215,92 @@ export default function App() {
       </div>
 
       <header className="hud-bar hud-bar--top">
-        <div className="app-header">
-          <div className="toolbar-card settings-card">
-            <div className="settings-card__heading">
-              <span className="eyebrow">{t("controlsTitle")}</span>
+        <div className="hud-top">
+          <div className="hud-top__brand">
+            <span className="eyebrow">{t("controlsTitle")}</span>
+            <div className="hud-top__brand-row">
               <h1 className="brand-title">Primordium</h1>
               <p className="tip-text">{t("tipClick")}</p>
             </div>
-            <div className="settings-card__controls">
-              <div className="control-group">
-                <label className="control-label" htmlFor="language-select">
-                  {t("language")}
-                </label>
-                <div className="input-wrapper">
-                  <select
-                    id="language-select"
-                    value={i18n.language}
-                    onChange={(e) => i18n.changeLanguage(e.target.value)}
-                  >
-                    <option value="pt">Português</option>
-                    <option value="en">English</option>
-                  </select>
-                </div>
+          </div>
+          <div className="hud-top__controls">
+            <div className="control-group">
+              <label className="control-label" htmlFor="language-select">
+                {t("language")}
+              </label>
+              <div className="input-wrapper">
+                <select
+                  id="language-select"
+                  value={i18n.language}
+                  onChange={(e) => i18n.changeLanguage(e.target.value)}
+                >
+                  <option value="pt">Português</option>
+                  <option value="en">English</option>
+                </select>
               </div>
-              <div className="control-group control-checkbox">
-                <input
-                  id="remove-originals-toggle"
-                  type="checkbox"
-                  checked={removeOnCombine}
-                  onChange={(e) => setRemoveOnCombine(e.target.checked)}
-                />
-                <label htmlFor="remove-originals-toggle">
-                  {t("removeOriginals")}
-                </label>
-              </div>
-              <button className="primary-button" onClick={reset}>
-                {t("reset")}
-              </button>
             </div>
+            <div className="control-checkbox">
+              <input
+                id="remove-originals-toggle"
+                type="checkbox"
+                checked={removeOnCombine}
+                onChange={(e) => setRemoveOnCombine(e.target.checked)}
+              />
+              <label htmlFor="remove-originals-toggle">
+                {t("removeOriginals")}
+              </label>
+            </div>
+            <button className="primary-button" onClick={reset}>
+              {t("reset")}
+            </button>
           </div>
-          <div className="toolbar-card book-card">
-            <span className="eyebrow">{t("bookTooltip")}</span>
-            <a
-              className="book-card__cover"
-              href={t("bookLink")}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={t("bookTooltip")}
-            >
-              <img src="/img/book/book_cover.jpg" alt="Book" loading="lazy" />
-            </a>
-            <a
-              className="ghost-button"
-              href={t("bookLink")}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t("buyNow")}
-              <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-          <div className="toolbar-card social-card">
-            <span className="eyebrow">{t("followUs")}</span>
-            <ul className="social-list">
-              <li>
-                <a
-                  className="social-link"
-                  href="https://github.com/Bobagi/primordium"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t("social.github")}
-                  <span aria-hidden="true">↗</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  className="social-link"
-                  href="https://www.linkedin.com/in/gustavoaperin/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t("social.linkedin")}
-                  <span aria-hidden="true">↗</span>
-                </a>
-              </li>
-            </ul>
+          <div className="hud-top__links">
+            <div className="hud-top__links-group">
+              <span className="eyebrow">{t("bookTooltip")}</span>
+              <a
+                className="book-pill"
+                href={t("bookLink")}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={t("bookTooltip")}
+              >
+                <img
+                  src="/img/book/book_cover.jpg"
+                  alt="Book"
+                  loading="lazy"
+                />
+                <span className="book-pill__label">
+                  {t("buyNow")} <span aria-hidden="true">↗</span>
+                </span>
+              </a>
+            </div>
+            <div className="hud-top__links-group">
+              <span className="eyebrow">{t("followUs")}</span>
+              <ul className="social-list">
+                <li>
+                  <a
+                    className="social-link"
+                    href="https://github.com/Bobagi/primordium"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {t("social.github")}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="social-link"
+                    href="https://www.linkedin.com/in/gustavoaperin/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {t("social.linkedin")}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </header>

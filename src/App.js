@@ -214,113 +214,83 @@ export default function App() {
         })}
       </div>
 
-      <header className="hud-bar hud-bar--top">
-        <div className="hud-top">
-          <div className="hud-top__brand">
-            <span className="eyebrow">{t("controlsTitle")}</span>
-            <div className="hud-top__brand-row">
-              <h1 className="brand-title">Primordium</h1>
-              <p className="tip-text">{t("tipClick")}</p>
-            </div>
+      <header className="hud-topbar" aria-label={t("controlsTitle")}>
+        <div className="hud-topbar__content">
+          <div className="hud-topbar__group hud-topbar__brand">
+            <span className="hud-topbar__logo">Primordium</span>
+            <span className="hud-topbar__tip">{t("tipClick")}</span>
           </div>
-          <div className="hud-top__controls">
-            <div className="control-group">
-              <label className="control-label" htmlFor="language-select">
-                {t("language")}
-              </label>
-              <div className="input-wrapper">
-                <select
-                  id="language-select"
-                  value={i18n.language}
-                  onChange={(e) => i18n.changeLanguage(e.target.value)}
-                >
-                  <option value="pt">Português</option>
-                  <option value="en">English</option>
-                </select>
-              </div>
+          <div className="hud-topbar__group hud-topbar__controls">
+            <div className="hud-topbar__item hud-topbar__language">
+              <span className="hud-topbar__label">{t("language")}</span>
+              <select
+                id="language-select"
+                value={i18n.language}
+                onChange={(e) => i18n.changeLanguage(e.target.value)}
+              >
+                <option value="pt">Português</option>
+                <option value="en">English</option>
+              </select>
             </div>
-            <div className="control-checkbox">
+            <label className="hud-topbar__item hud-topbar__checkbox">
               <input
-                id="remove-originals-toggle"
                 type="checkbox"
                 checked={removeOnCombine}
                 onChange={(e) => setRemoveOnCombine(e.target.checked)}
               />
-              <label htmlFor="remove-originals-toggle">
-                {t("removeOriginals")}
-              </label>
-            </div>
-            <button className="primary-button" onClick={reset}>
+              <span>{t("removeOriginals")}</span>
+            </label>
+            <button className="hud-topbar__button" onClick={reset}>
               {t("reset")}
             </button>
           </div>
-          <div className="hud-top__links">
-            <div className="hud-top__links-group">
-              <span className="eyebrow">{t("bookTooltip")}</span>
-              <a
-                className="book-pill"
-                href={t("bookLink")}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={t("bookTooltip")}
-              >
-                <img
-                  src="/img/book/book_cover.jpg"
-                  alt="Book"
-                  loading="lazy"
-                />
-                <span className="book-pill__label">
-                  {t("buyNow")} <span aria-hidden="true">↗</span>
-                </span>
-              </a>
-            </div>
-            <div className="hud-top__links-group">
-              <span className="eyebrow">{t("followUs")}</span>
-              <ul className="social-list">
-                <li>
-                  <a
-                    className="social-link"
-                    href="https://github.com/Bobagi/primordium"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {t("social.github")}
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="social-link"
-                    href="https://www.linkedin.com/in/gustavoaperin/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {t("social.linkedin")}
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
+          <div className="hud-topbar__group hud-topbar__links">
+            <a
+              className="hud-topbar__link hud-topbar__book"
+              href={t("bookLink")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("buyNow")}
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a
+              className="hud-topbar__link"
+              href="https://github.com/Bobagi/primordium"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("social.github")}
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a
+              className="hud-topbar__link"
+              href="https://www.linkedin.com/in/gustavoaperin/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("social.linkedin")}
+              <span aria-hidden="true">↗</span>
+            </a>
           </div>
         </div>
       </header>
 
-      <section
-        className="hud-bar hud-bar--bottom hud-bar--side activity-feed"
-        aria-live="polite"
-      >
-        <div className="activity-feed__title">{t("combinations")}</div>
-        <ul className="activity-feed__list">
+      <aside className="activity-sidebar" aria-live="polite">
+        <div className="activity-sidebar__header">{t("combinations")}</div>
+        <ul className="activity-sidebar__list">
           {feed.length === 0 && (
-            <li className="activity-feed__item activity-feed__item--empty">—</li>
+            <li className="activity-sidebar__item activity-sidebar__item--empty">
+              —
+            </li>
           )}
           {feed.map((item) => (
-            <li className="activity-feed__item" key={item.ts}>
+            <li className="activity-sidebar__item" key={item.ts}>
               {item.text}
             </li>
           ))}
         </ul>
-      </section>
+      </aside>
     </div>
   );
 }

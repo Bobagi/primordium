@@ -1,3 +1,7 @@
+:root {
+  --hud-height: 72px;
+}
+
 .App {
   min-height: 100vh;
   position: relative;
@@ -181,7 +185,7 @@
 
 .activity-sidebar {
   position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 72px);
+  top: calc(env(safe-area-inset-top, 0px) + 12px + var(--hud-height, 72px));
   right: clamp(12px, 3vw, 36px);
   bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
   width: min(280px, calc(100vw - 24px));
@@ -265,7 +269,6 @@
   }
 
   .activity-sidebar {
-    top: calc(env(safe-area-inset-top, 0px) + 120px);
     width: min(320px, calc(100vw - 24px));
   }
 }
@@ -284,7 +287,6 @@
   }
 
   .activity-sidebar {
-    top: calc(env(safe-area-inset-top, 0px) + 140px);
     right: 12px;
     width: min(280px, calc(100vw - 24px));
   }

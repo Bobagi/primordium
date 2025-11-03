@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import Element from "./Element";
 import PhysicsEngine from "./PhysicsEngine";
@@ -18,6 +24,35 @@ export default function App() {
   const canvasRef = useRef(null);
   const [viewOffset, setViewOffset] = useState({ x: 0, y: 0 });
   const panState = useRef(null);
+  const headerRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const node = headerRef.current;
+    if (!node) return;
+
+    const updateHudHeight = () => {
+      const rect = node.getBoundingClientRect();
+      document.documentElement.style.setProperty(
+        "--hud-height",
+        `${rect.height}px`
+      );
+    };
+
+    updateHudHeight();
+
+    let resizeObserver;
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(updateHudHeight);
+      resizeObserver.observe(node);
+    }
+
+    window.addEventListener("resize", updateHudHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateHudHeight);
+      resizeObserver?.disconnect();
+    };
+  }, []);
 
   useEffect(() => forceUpdate((n) => n + 1), [elements]);
 
@@ -215,7 +250,7 @@ export default function App() {
       </div>
 
       <header className="hud-topbar" aria-label={t("controlsTitle")}>
-        <div className="hud-topbar__content">
+        <div ref={headerRef} className="hud-topbar__content">
           <div className="hud-topbar__group hud-topbar__brand">
             <span className="hud-topbar__logo">Primordium</span>
             <span className="hud-topbar__tip">{t("tipClick")}</span>

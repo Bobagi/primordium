@@ -5,6 +5,7 @@
   "controlsTitle": "Simulation controls",
   "language": "Language",
   "removeOriginals": "Remove on combine",
+  "removeOriginalsHint": "When enabled, removes the original bubbles after a new element is created.",
   "reset": "Reset",
   "tipClick": "💡 Tip: click a circle to open an informative link.",
   "combinations": "Combinations",

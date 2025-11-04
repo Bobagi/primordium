@@ -33,7 +33,7 @@
   opacity: 0.7;
   animation: trail 0.5s ease-out forwards;
   will-change: transform, opacity;
-  z-index: 1;
+  z-index: 0;
 }
 
 /* ——————————————————————————————————————————— */

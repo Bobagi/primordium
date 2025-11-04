@@ -53,12 +53,20 @@ const Element = ({
 
           const trail = document.createElement("div");
           trail.className = "trail";
-          document.body.appendChild(trail);
           const rect = t.getBoundingClientRect();
-          trail.style.left = `${rect.left + rect.width / 2}px`;
-          trail.style.top = `${rect.top + rect.height / 2}px`;
+          const playfield = document.querySelector(".playfield");
+          if (playfield) {
+            const fieldRect = playfield.getBoundingClientRect();
+            trail.style.left = `${rect.left + rect.width / 2 - fieldRect.left}px`;
+            trail.style.top = `${rect.top + rect.height / 2 - fieldRect.top}px`;
+            playfield.appendChild(trail);
+          } else {
+            trail.style.left = `${rect.left + rect.width / 2}px`;
+            trail.style.top = `${rect.top + rect.height / 2}px`;
+            document.body.appendChild(trail);
+          }
           trail.style.color = color;
-          trail.style.zIndex = "1";
+          trail.style.zIndex = "0";
           const ang = Math.random() * 2 * Math.PI;
           const dist = 10 + Math.random() * 10;
           trail.style.setProperty("--dx", `${Math.cos(ang) * dist}px`);

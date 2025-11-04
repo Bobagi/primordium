@@ -274,7 +274,14 @@ export default function App() {
       <header className="hud-topbar" aria-label={t("controlsTitle")}>
         <div ref={headerRef} className="hud-topbar__content">
           <div className="hud-topbar__left">
-            <span className="hud-topbar__logo">Primordium</span>
+            <span className="hud-topbar__brand" aria-label="Primordium">
+              <img
+                className="hud-topbar__brand-icon"
+                src="/favicon.ico"
+                alt=""
+              />
+              <span className="hud-topbar__logo">Primordium</span>
+            </span>
             <span className="hud-topbar__tip">{t("tipClick")}</span>
           </div>
           <a
@@ -288,7 +295,7 @@ export default function App() {
               src="/img/book/book_cover.jpg"
               alt={t("bookTooltip")}
             />
-            <span className="sr-only">{t("buyNow")}</span>
+            <span className="hud-topbar__book-text">{t("buyNow")}</span>
           </a>
           <div className="hud-topbar__group hud-topbar__controls">
             <div className="hud-topbar__item hud-topbar__language">
@@ -302,7 +309,10 @@ export default function App() {
                 <option value="en">English</option>
               </select>
             </div>
-            <label className="hud-topbar__item hud-topbar__checkbox">
+            <label
+              className="hud-topbar__item hud-topbar__checkbox"
+              title={t("removeOriginalsHint")}
+            >
               <input
                 type="checkbox"
                 checked={removeOnCombine}

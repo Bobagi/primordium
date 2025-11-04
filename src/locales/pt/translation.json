@@ -5,6 +5,7 @@
   "controlsTitle": "Controles da simulação",
   "language": "Idioma",
   "removeOriginals": "Remover ao fundir",
+  "removeOriginalsHint": "Quando ativado, remove as bolinhas originais após criar um novo elemento.",
   "reset": "Recomeçar",
   "tipClick": "💡 Dica: clique em uma bolinha para abrir um link com mais informações.",
   "combinations": "Combinações",

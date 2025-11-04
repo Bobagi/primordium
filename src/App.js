@@ -1,9 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import Element from "./Element";
 import PhysicsEngine from "./PhysicsEngine";
 import { combos } from "./data/elements";
 import { createInitialElements } from "./utils/elementFactory";
+import "./App.css";
 
 export default function App() {
   const { t, i18n } = useTranslation();
@@ -11,12 +18,65 @@ export default function App() {
   const [elements, setElements] = useState(() => createInitialElements());
   const [feed, setFeed] = useState([]);
   const [removeOnCombine, setRemoveOnCombine] = useState(true);
+  const [isFeedOpen, setFeedOpen] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.innerWidth > 768;
+  });
   const recentlyCombined = useRef(new Set());
   const elementRefs = useRef({});
   const [, forceUpdate] = useState(0);
   const canvasRef = useRef(null);
+  const [viewOffset, setViewOffset] = useState({ x: 0, y: 0 });
+  const panState = useRef(null);
+  const headerRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const node = headerRef.current;
+    if (!node) return;
+
+    const updateHudHeight = () => {
+      const rect = node.getBoundingClientRect();
+      document.documentElement.style.setProperty(
+        "--hud-height",
+        `${rect.height}px`
+      );
+    };
+
+    updateHudHeight();
+
+    let resizeObserver;
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(updateHudHeight);
+      resizeObserver.observe(node);
+    }
+
+    window.addEventListener("resize", updateHudHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateHudHeight);
+      resizeObserver?.disconnect();
+    };
+  }, []);
 
   useEffect(() => forceUpdate((n) => n + 1), [elements]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setFeedOpen(true);
+      } else {
+        setFeedOpen(false);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const registerCombo = (a, b) => {
     const key = [a, b].sort().join("+");
@@ -95,127 +155,60 @@ export default function App() {
   const reset = () => {
     setElements(createInitialElements());
     setFeed([]);
+    setViewOffset({ x: 0, y: 0 });
+  };
+
+  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+  const handlePanStart = (event) => {
+    if (!canvasRef.current || event.target.closest(".elemento")) return;
+
+    panState.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      offset: { ...viewOffset },
+    };
+
+    canvasRef.current.classList.add("is-panning");
+    canvasRef.current.setPointerCapture?.(event.pointerId);
+  };
+
+  const handlePanMove = (event) => {
+    if (!panState.current || panState.current.pointerId !== event.pointerId)
+      return;
+
+    const dx = event.clientX - panState.current.startX;
+    const dy = event.clientY - panState.current.startY;
+
+    setViewOffset({
+      x: clamp(panState.current.offset.x + dx, -160, 160),
+      y: clamp(panState.current.offset.y + dy, -160, 160),
+    });
+  };
+
+  const handlePanEnd = (event) => {
+    if (!panState.current || panState.current.pointerId !== event.pointerId)
+      return;
+
+    canvasRef.current?.classList.remove("is-panning");
+    canvasRef.current?.releasePointerCapture?.(event.pointerId);
+    panState.current = null;
   };
 
   return (
-    <div
-      className="App"
-      style={{ display: "flex", flexDirection: "column", height: "100vh" }}
-    >
+    <div className="App">
       <PhysicsEngine elements={elements} setElements={setElements} />
 
-      {/* Header */}
       <div
-        style={{
-          display: "flex",
-          gap: "12px",
-          padding: "8px",
-          fontSize: "0.9em",
-          zIndex: 2,
-        }}
+        ref={canvasRef}
+        className="playfield"
+        onPointerDown={handlePanStart}
+        onPointerMove={handlePanMove}
+        onPointerUp={handlePanEnd}
+        onPointerCancel={handlePanEnd}
       >
-        <div
-          style={{
-            background: "#fff",
-            padding: "8px",
-            border: "1px solid #ccc",
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          <select
-            value={i18n.language}
-            onChange={(e) => i18n.changeLanguage(e.target.value)}
-          >
-            <option value="pt">Português</option>
-            <option value="en">English</option>
-          </select>
-          <label>
-            <input
-              type="checkbox"
-              checked={removeOnCombine}
-              onChange={(e) => setRemoveOnCombine(e.target.checked)}
-            />{" "}
-            {t("removeOriginals")}
-          </label>
-          <button onClick={reset}>{t("reset")}</button>
-          <div style={{ color: "#444", flexBasis: "100%" }}>
-            {t("tipClick")}
-          </div>
-        </div>
-        <div
-          style={{
-            background: "#fff",
-            padding: "8px",
-            border: "1px solid #ccc",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <a
-            href={t("bookLink")}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={t("bookTooltip")}
-          >
-            <img
-              src="/img/book/book_cover.jpg"
-              alt="Book"
-              loading="lazy"
-              style={{ height: 120 }}
-            />
-          </a>
-        </div>
-        <div
-          style={{
-            background: "#fff",
-            padding: "8px",
-            border: "1px solid #ccc",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            gap: "6px",
-            minWidth: "160px",
-          }}
-        >
-          <span style={{ fontWeight: "bold", color: "#444" }}>
-            {t("followUs")}
-          </span>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-            <a
-              href="https://github.com/Bobagi/primordium"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t("social.github")}
-            </a>
-            <a
-              href="https://www.linkedin.com/company/kairos-labs"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t("social.linkedin")}
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Bolinhas + Linhas */}
-      <div ref={canvasRef} style={{ position: "relative", flex: 1 }}>
-        <svg
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-            zIndex: 1,
-          }}
-        >
+        <svg className="playfield-overlay">
           {elements.map((e1) =>
             elements.map((e2) => {
               if (e1.id >= e2.id) return null;
@@ -248,8 +241,9 @@ export default function App() {
                   y1={y1}
                   x2={x2}
                   y2={y2}
-                  stroke="gray"
-                  strokeWidth={1}
+                  stroke="#94a3b8"
+                  strokeWidth={1.5}
+                  strokeLinecap="round"
                 />
               );
             })
@@ -269,6 +263,7 @@ export default function App() {
               description={t(`elements.${baseKey}.description`)}
               image={e.image}
               color={e.color}
+              offset={viewOffset}
               innerRef={(node) => (elementRefs.current[e.id] = node)}
               onMove={handleMove}
             />
@@ -276,22 +271,112 @@ export default function App() {
         })}
       </div>
 
-      {/* Feed */}
-      <div
-        style={{
-          background: "#fff",
-          padding: "10px",
-          borderTop: "1px solid #ccc",
-          fontFamily: "monospace",
-          fontSize: "0.9em",
-          zIndex: 2,
-        }}
+      <header className="hud-topbar" aria-label={t("controlsTitle")}>
+        <div ref={headerRef} className="hud-topbar__content">
+          <div className="hud-topbar__left">
+            <span className="hud-topbar__brand" aria-label="Primordium">
+              <img
+                className="hud-topbar__brand-icon"
+                src="/favicon.ico"
+                alt=""
+              />
+              <span className="hud-topbar__logo">Primordium</span>
+            </span>
+            <span className="hud-topbar__tip">{t("tipClick")}</span>
+          </div>
+          <a
+            className="hud-topbar__book"
+            href={t("bookLink")}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              className="hud-topbar__book-art"
+              src="/img/book/book_cover.jpg"
+              alt={t("bookTooltip")}
+            />
+            <span className="hud-topbar__book-text">{t("buyNow")}</span>
+          </a>
+          <div className="hud-topbar__group hud-topbar__controls">
+            <div className="hud-topbar__item hud-topbar__language">
+              <span className="hud-topbar__label">{t("language")}</span>
+              <select
+                id="language-select"
+                value={i18n.language}
+                onChange={(e) => i18n.changeLanguage(e.target.value)}
+              >
+                <option value="pt">Português</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+            <label
+              className="hud-topbar__item hud-topbar__checkbox"
+              title={t("removeOriginalsHint")}
+            >
+              <input
+                type="checkbox"
+                checked={removeOnCombine}
+                onChange={(e) => setRemoveOnCombine(e.target.checked)}
+              />
+              <span>{t("removeOriginals")}</span>
+            </label>
+            <button className="hud-topbar__button" onClick={reset}>
+              {t("reset")}
+            </button>
+          </div>
+          <div className="hud-topbar__group hud-topbar__links">
+            <a
+              className="hud-topbar__link"
+              href="https://github.com/Bobagi/primordium"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("social.github")}
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a
+              className="hud-topbar__link"
+              href="https://www.linkedin.com/in/gustavoaperin/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("social.linkedin")}
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <button
+        type="button"
+        className={`activity-toggle${isFeedOpen ? " is-open" : ""}`}
+        onClick={() => setFeedOpen((open) => !open)}
+        aria-expanded={isFeedOpen}
+        aria-controls="activity-feed"
       >
-        <strong>{t("combinations")}:</strong>
-        {feed.map((item) => (
-          <div key={item.ts}>{item.text}</div>
-        ))}
-      </div>
+        <span aria-hidden="true">🧪</span>
+        <span>{t("combinations")}</span>
+      </button>
+
+      <aside
+        id="activity-feed"
+        className={`activity-sidebar${isFeedOpen ? " is-open" : ""}`}
+        aria-live="polite"
+      >
+        <div className="activity-sidebar__header">{t("combinations")}</div>
+        <ul className="activity-sidebar__list">
+          {feed.length === 0 && (
+            <li className="activity-sidebar__item activity-sidebar__item--empty">
+              —
+            </li>
+          )}
+          {feed.map((item) => (
+            <li className="activity-sidebar__item" key={item.ts}>
+              {item.text}
+            </li>
+          ))}
+        </ul>
+      </aside>
     </div>
   );
 }

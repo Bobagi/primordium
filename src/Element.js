@@ -11,8 +11,10 @@ const Element = ({
   wiki,
   onMove,
   innerRef,
+  offset = { x: 0, y: 0 },
 }) => {
   const ref = useRef(null);
+  const offsetRef = useRef(offset);
   const clickStart = useRef({ x: 0, y: 0 });
 
   const fontSize = 14;
@@ -28,9 +30,14 @@ const Element = ({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    const applyTransform = (node, nx, ny) => {
+      const currentOffset = offsetRef.current;
+      node.style.transform = `translate(${nx + currentOffset.x}px, ${ny + currentOffset.y}px)`;
+    };
+
     el.setAttribute("data-x", x);
     el.setAttribute("data-y", y);
-    el.style.transform = `translate(${x}px, ${y}px)`;
+    applyTransform(el, x, y);
     if (innerRef) innerRef(el);
 
     interact(el).draggable({
@@ -39,18 +46,27 @@ const Element = ({
           const t = event.target;
           const nx = (parseFloat(t.getAttribute("data-x")) || 0) + event.dx;
           const ny = (parseFloat(t.getAttribute("data-y")) || 0) + event.dy;
-          t.style.transform = `translate(${nx}px, ${ny}px)`;
+          applyTransform(t, nx, ny);
           t.setAttribute("data-x", nx);
           t.setAttribute("data-y", ny);
           onMove(id, nx, ny);
 
           const trail = document.createElement("div");
           trail.className = "trail";
-          document.body.appendChild(trail);
           const rect = t.getBoundingClientRect();
-          trail.style.left = `${rect.left + rect.width / 2}px`;
-          trail.style.top = `${rect.top + rect.height / 2}px`;
+          const playfield = document.querySelector(".playfield");
+          if (playfield) {
+            const fieldRect = playfield.getBoundingClientRect();
+            trail.style.left = `${rect.left + rect.width / 2 - fieldRect.left}px`;
+            trail.style.top = `${rect.top + rect.height / 2 - fieldRect.top}px`;
+            playfield.appendChild(trail);
+          } else {
+            trail.style.left = `${rect.left + rect.width / 2}px`;
+            trail.style.top = `${rect.top + rect.height / 2}px`;
+            document.body.appendChild(trail);
+          }
           trail.style.color = color;
+          trail.style.zIndex = "0";
           const ang = Math.random() * 2 * Math.PI;
           const dist = 10 + Math.random() * 10;
           trail.style.setProperty("--dx", `${Math.cos(ang) * dist}px`);
@@ -60,6 +76,15 @@ const Element = ({
       },
     });
   }, [id, x, y, onMove, innerRef, color]);
+
+  useEffect(() => {
+    offsetRef.current = offset;
+    const node = ref.current;
+    if (!node) return;
+    const nx = parseFloat(node.getAttribute("data-x")) || 0;
+    const ny = parseFloat(node.getAttribute("data-y")) || 0;
+    node.style.transform = `translate(${nx + offset.x}px, ${ny + offset.y}px)`;
+  }, [offset]);
 
   return (
     <div
@@ -77,7 +102,7 @@ const Element = ({
         position: "absolute",
         width: `${size}px`,
         height: `${size}px`,
-        transform: `translate(${x}px, ${y}px)`,
+        transform: `translate(${x + offset.x}px, ${y + offset.y}px)`,
         zIndex: 2,
         cursor: "grab",
         userSelect: "none",

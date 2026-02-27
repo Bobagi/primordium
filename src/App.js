@@ -11,6 +11,7 @@ import PhysicsEngine from "./PhysicsEngine";
 import { combos } from "./data/elements";
 import { createInitialElements } from "./utils/elementFactory";
 import "./App.css";
+import { trackEvent } from "./utils/analytics";
 
 export default function App() {
   const { t, i18n } = useTranslation();
@@ -78,6 +79,13 @@ export default function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+
+  useEffect(() => {
+    trackEvent("select_language", {
+      language: i18n.language,
+    });
+  }, [i18n.language]);
+
   const registerCombo = (a, b) => {
     const key = [a, b].sort().join("+");
     recentlyCombined.current.add(key);
@@ -117,6 +125,11 @@ export default function App() {
             return;
 
           registerCombo(id1, id2);
+          trackEvent("discover_combo", {
+            first_element: id1,
+            second_element: id2,
+            result_element: result.id,
+          });
 
           const newId = `${result.id}-${Date.now()}`;
           const newX = (nx + o.x) / 2 + 60;
@@ -153,6 +166,7 @@ export default function App() {
   );
 
   const reset = () => {
+    trackEvent("reset_game");
     setElements(createInitialElements());
     setFeed([]);
     setViewOffset({ x: 0, y: 0 });

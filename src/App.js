@@ -334,7 +334,7 @@ export default function App() {
               <span className="hud-topbar__label">{t("language")}</span>
               <select
                 id="language-select"
-                value={i18n.language}
+                value={i18n.resolvedLanguage || i18n.language}
                 onChange={(e) => i18n.changeLanguage(e.target.value)}
               >
                 <option value="pt">Português</option>

@@ -4,15 +4,15 @@ Primordium is a browser game inspired by the book "How to Invent Everything" by 
 Players combine primitive elements and technologies to rebuild civilization from scratch.
 
 ## Canonical URL
-- https://primordium.bobagi.click/
+- https://primordium.bobagi.space/
 
 ## Language
 - Portuguese (pt-BR)
 - English (en)
 
 ## Important pages
-- Home: https://primordium.bobagi.click/
-- Sitemap: https://primordium.bobagi.click/sitemap.xml
+- Home: https://primordium.bobagi.space/
+- Sitemap: https://primordium.bobagi.space/sitemap.xml
 
 ## Source
 - GitHub: https://github.com/Bobagi/primordium

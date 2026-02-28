@@ -54,7 +54,7 @@ This repo includes:
 
 Recommended next steps:
 1. Add and verify your domain in **Google Search Console**.
-2. Submit `https://primordium.bobagi.click/sitemap.xml`.
+2. Submit `https://primordium.bobagi.space/sitemap.xml`.
 3. In GA4, connect **Search Console** to see organic queries.
 4. Publish backlinks/posts mentioning:
    - Primordium

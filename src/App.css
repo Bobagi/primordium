@@ -227,6 +227,20 @@
   box-shadow: 0 12px 26px rgba(59, 130, 246, 0.25);
 }
 
+.hud-topbar__link-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hud-topbar__link-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
 .activity-sidebar {
   position: fixed;
   top: calc(env(safe-area-inset-top, 0px) + var(--hud-height, 64px) + 40px);
@@ -428,4 +442,3 @@
   white-space: nowrap;
   border: 0;
 }
-

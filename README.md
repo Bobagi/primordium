@@ -30,11 +30,13 @@ Primordium now supports GA4 tracking for:
 - game reset events
 
 ### 1) Configure your Measurement ID
-Create a `.env` file in the project root:
+Create a `.env` file in the project root (same folder as `package.json`, not inside `src`):
 
 ```bash
 REACT_APP_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 ```
+
+You can also use `.env.example.txt` as a copy/paste template.
 
 ### 2) Build and deploy
 For CRA, `REACT_APP_*` variables are injected at build time, so rebuild and redeploy after changing the ID.

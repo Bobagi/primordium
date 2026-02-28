@@ -14,7 +14,8 @@ i18n
     nonExplicitSupportedLngs: true,
     load: "languageOnly",
     detection: {
-      order: ["localStorage", "navigator", "htmlTag"],
+      order: ["localStorage", "querystring", "navigator"],
+      lookupQuerystring: "lang",
       caches: ["localStorage"],
     },
     interpolation: { escapeValue: false },

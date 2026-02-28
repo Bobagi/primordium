@@ -21,6 +21,48 @@ Runs tests using React Testing Library.
 ### `npm run eject`
 Ejects all CRA config and dependencies. Use with caution.
 
+## 📊 Analytics (Google Analytics 4)
+
+Primordium now supports GA4 tracking for:
+- visits/page views
+- language selection
+- combinations discovered in game
+- game reset events
+
+### 1) Configure your Measurement ID
+Create a `.env` file in the project root (same folder as `package.json`, not inside `src`):
+
+```bash
+REACT_APP_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+```
+
+You can also use `.env.example.txt` as a copy/paste template.
+
+### 2) Build and deploy
+For CRA, `REACT_APP_*` variables are injected at build time, so rebuild and redeploy after changing the ID.
+
+### 3) View data
+- GA4 dashboard: **Reports > Acquisition** (traffic source: Google, direct, referral, etc.)
+- GA4 dashboard: **Reports > Demographics** (country and region)
+- GA4 dashboard: **Engagement > Events** (`select_language`, `discover_combo`, `reset_game`)
+
+## 🔎 SEO checklist (Google + AI discoverability)
+
+This repo includes:
+- SEO metadata in `public/index.html`
+- `public/sitemap.xml`
+- `public/robots.txt`
+- `public/llms.txt` (optional AI-friendly metadata)
+
+Recommended next steps:
+1. Add and verify your domain in **Google Search Console**.
+2. Submit `https://primordium.bobagi.space/sitemap.xml`.
+3. In GA4, connect **Search Console** to see organic queries.
+4. Publish backlinks/posts mentioning:
+   - Primordium
+   - How to Invent Everything
+   - Ryan North
+
 ## 🧱 Tech Stack
 
 - **React 19**

@@ -5,6 +5,7 @@ import "./i18n";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import "./style.css";
+import { initAnalytics } from "./utils/analytics";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -17,3 +18,4 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+initAnalytics();

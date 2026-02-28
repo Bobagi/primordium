@@ -13,6 +13,24 @@ import { createInitialElements } from "./utils/elementFactory";
 import "./App.css";
 import { trackEvent } from "./utils/analytics";
 
+const GithubLogo = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      fill="currentColor"
+      d="M12 .5a12 12 0 0 0-3.79 23.38c.6.1.82-.26.82-.58v-2.14c-3.34.73-4.04-1.6-4.04-1.6-.55-1.37-1.33-1.74-1.33-1.74-1.08-.74.08-.73.08-.73 1.2.08 1.82 1.2 1.82 1.2 1.05 1.8 2.78 1.28 3.46.98.1-.76.42-1.28.76-1.58-2.66-.3-5.46-1.32-5.46-5.86 0-1.3.47-2.37 1.23-3.2-.12-.3-.53-1.52.12-3.16 0 0 1-.32 3.3 1.22a11.6 11.6 0 0 1 6 0c2.28-1.54 3.3-1.22 3.3-1.22.65 1.64.24 2.86.12 3.16.76.83 1.23 1.9 1.23 3.2 0 4.55-2.8 5.55-5.48 5.84.44.37.82 1.08.82 2.2v3.27c0 .32.22.68.83.57A12 12 0 0 0 12 .5Z"
+    />
+  </svg>
+);
+
+const LinkedinLogo = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      fill="currentColor"
+      d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM2.5 9h5V21h-5V9Zm8 0h4.78v1.71h.07c.66-1.25 2.3-2.56 4.73-2.56 5.05 0 5.98 3.22 5.98 7.41V21h-4.98v-4.8c0-1.15-.02-2.64-1.64-2.64-1.64 0-1.9 1.25-1.9 2.55V21H10.5V9Z"
+    />
+  </svg>
+);
+
 export default function App() {
   const { t, i18n } = useTranslation();
 
@@ -345,6 +363,9 @@ export default function App() {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <span className="hud-topbar__link-icon">
+                <GithubLogo />
+              </span>
               {t("social.github")}
               <span aria-hidden="true">↗</span>
             </a>
@@ -354,6 +375,9 @@ export default function App() {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <span className="hud-topbar__link-icon">
+                <LinkedinLogo />
+              </span>
               {t("social.linkedin")}
               <span aria-hidden="true">↗</span>
             </a>

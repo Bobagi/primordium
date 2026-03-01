@@ -39,4 +39,20 @@ export const combos = {
     id: "shovel",
     image: "/img/carbon.png",
   },
+  "axe+shovel": {
+    id: "hoe",
+    image: "/img/carbon.png",
+  },
+  "hoe+stone": {
+    id: "seeds",
+    image: "/img/carbon.png",
+  },
+  "hoe+shovel": {
+    id: "tilled_soil",
+    image: "/img/carbon.png",
+  },
+  "seeds+tilled_soil": {
+    id: "farming",
+    image: "/img/carbon.png",
+  },
 };

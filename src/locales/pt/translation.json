@@ -49,6 +49,26 @@
       "name": "Pá",
       "description": "Construa uma pá unindo uma pedra pontiaguda a um cabo de madeira. Use-a para cavar, mover terra e criar trincheiras. Uma pá é útil para escavação e construção.",
       "wiki": "https://pt.wikipedia.org/wiki/P%C3%A1"
+    },
+    "hoe": {
+      "name": "Enxada",
+      "description": "Uma enxada combina corte e alavanca para preparar o solo. Use para quebrar a camada superficial da terra e abrir linhas de plantio.",
+      "wiki": "https://pt.wikipedia.org/wiki/Enxada"
+    },
+    "seeds": {
+      "name": "Sementes",
+      "description": "Selecione e guarde sementes das melhores plantas para replantio. Essa seleção melhora colheita e estabilidade de alimento ao longo das gerações.",
+      "wiki": "https://pt.wikipedia.org/wiki/Semente"
+    },
+    "tilled_soil": {
+      "name": "Solo preparado",
+      "description": "Solo revolvido e aerado facilita germinação e enraizamento. Canteiros bem preparados ajudam no controle de água e ervas invasoras.",
+      "wiki": "https://pt.wikipedia.org/wiki/Preparo_do_solo"
+    },
+    "farming": {
+      "name": "Agricultura",
+      "description": "Com sementes selecionadas e solo preparado, você inicia agricultura estável. Isso abre caminho para excedente calórico, aldeias permanentes e especialização do trabalho.",
+      "wiki": "https://pt.wikipedia.org/wiki/Agricultura"
     }
   }
 }

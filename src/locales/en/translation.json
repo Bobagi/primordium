@@ -49,6 +49,26 @@
       "name": "Shovel",
       "description": "Build a shovel by attaching a pointed stone to a wooden handle. Use it for digging, moving earth, and creating trenches. A shovel is useful for excavation and construction.",
       "wiki": "https://en.wikipedia.org/wiki/Shovel"
+    },
+    "hoe": {
+      "name": "Hoe",
+      "description": "A hoe combines cutting and leverage to prepare the ground. Use it to break topsoil and open planting rows.",
+      "wiki": "https://en.wikipedia.org/wiki/Hoe_(tool)"
+    },
+    "seeds": {
+      "name": "Seeds",
+      "description": "Select and store seeds from the best plants for replanting. This improves yields and food reliability across generations.",
+      "wiki": "https://en.wikipedia.org/wiki/Seed"
+    },
+    "tilled_soil": {
+      "name": "Tilled soil",
+      "description": "Turned and aerated soil helps germination and root growth. Well-prepared plots improve water control and reduce weeds.",
+      "wiki": "https://en.wikipedia.org/wiki/Tillage"
+    },
+    "farming": {
+      "name": "Farming",
+      "description": "With selected seeds and prepared soil, you can begin stable agriculture. This unlocks calorie surplus, permanent settlements, and labor specialization.",
+      "wiki": "https://en.wikipedia.org/wiki/Agriculture"
     }
   }
 }

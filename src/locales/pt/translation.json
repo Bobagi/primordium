@@ -40,6 +40,11 @@
       "description": "Colete pedras de leitos de rios ou penhascos. Use-as para ferramentas, armas e construção. A pedra pode ser moldada com outras pedras para criar arestas afiadas ou usada como material sólido.",
       "wiki": "https://pt.wikipedia.org/wiki/Pedra"
     },
+    "wild_grass": {
+      "name": "Gramíneas silvestres",
+      "description": "Capins e cereais selvagens são fontes iniciais de grãos. Coletar e selecionar essas plantas é o primeiro passo para domesticar sementes.",
+      "wiki": "https://pt.wikipedia.org/wiki/Poaceae"
+    },
     "axe": {
       "name": "Machado",
       "description": "Crie um machado fixando uma pedra afiada a um cabo de madeira. Use-o para cortar madeira, abrir caminhos e construir estruturas. Um machado é essencial para a sobrevivência na natureza.",
@@ -49,6 +54,26 @@
       "name": "Pá",
       "description": "Construa uma pá unindo uma pedra pontiaguda a um cabo de madeira. Use-a para cavar, mover terra e criar trincheiras. Uma pá é útil para escavação e construção.",
       "wiki": "https://pt.wikipedia.org/wiki/P%C3%A1"
+    },
+    "hoe": {
+      "name": "Enxada",
+      "description": "Uma enxada combina corte e alavanca para preparar o solo. Use para quebrar a camada superficial da terra e abrir linhas de plantio.",
+      "wiki": "https://pt.wikipedia.org/wiki/Enxada"
+    },
+    "seeds": {
+      "name": "Sementes",
+      "description": "Extraia sementes de gramíneas silvestres e separe as melhores para replantio. A seleção contínua aumenta produtividade e estabilidade alimentar.",
+      "wiki": "https://pt.wikipedia.org/wiki/Semente"
+    },
+    "tilled_soil": {
+      "name": "Solo preparado",
+      "description": "Solo revolvido e aerado facilita germinação e enraizamento. Canteiros bem preparados ajudam no controle de água e ervas invasoras.",
+      "wiki": "https://pt.wikipedia.org/wiki/Preparo_do_solo"
+    },
+    "farming": {
+      "name": "Agricultura",
+      "description": "Com sementes selecionadas e solo preparado, você inicia agricultura estável. Isso abre caminho para excedente calórico, aldeias permanentes e especialização do trabalho.",
+      "wiki": "https://pt.wikipedia.org/wiki/Agricultura"
     }
   }
 }

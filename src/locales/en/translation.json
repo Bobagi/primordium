@@ -40,6 +40,11 @@
       "description": "Collect stones from riverbeds or cliffs. Use them for tools, weapons, and construction. Stone can be shaped with other stones to create sharp edges or used as a solid building material.",
       "wiki": "https://en.wikipedia.org/wiki/Stone"
     },
+    "wild_grass": {
+      "name": "Wild grasses",
+      "description": "Wild grasses and early cereals are natural grain sources. Gathering and selecting them is the first step toward seed domestication.",
+      "wiki": "https://en.wikipedia.org/wiki/Poaceae"
+    },
     "axe": {
       "name": "Axe",
       "description": "Craft an axe by attaching a sharp stone to a wooden handle. Use it for chopping wood, clearing paths, and building structures. An axe is essential for survival in the wilderness.",
@@ -57,7 +62,7 @@
     },
     "seeds": {
       "name": "Seeds",
-      "description": "Select and store seeds from the best plants for replanting. This improves yields and food reliability across generations.",
+      "description": "Extract seeds from wild grasses and keep the best ones for replanting. Ongoing selection improves yield and food reliability.",
       "wiki": "https://en.wikipedia.org/wiki/Seed"
     },
     "tilled_soil": {

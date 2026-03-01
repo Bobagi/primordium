@@ -40,6 +40,11 @@
       "description": "Colete pedras de leitos de rios ou penhascos. Use-as para ferramentas, armas e construção. A pedra pode ser moldada com outras pedras para criar arestas afiadas ou usada como material sólido.",
       "wiki": "https://pt.wikipedia.org/wiki/Pedra"
     },
+    "wild_grass": {
+      "name": "Gramíneas silvestres",
+      "description": "Capins e cereais selvagens são fontes iniciais de grãos. Coletar e selecionar essas plantas é o primeiro passo para domesticar sementes.",
+      "wiki": "https://pt.wikipedia.org/wiki/Poaceae"
+    },
     "axe": {
       "name": "Machado",
       "description": "Crie um machado fixando uma pedra afiada a um cabo de madeira. Use-o para cortar madeira, abrir caminhos e construir estruturas. Um machado é essencial para a sobrevivência na natureza.",
@@ -57,7 +62,7 @@
     },
     "seeds": {
       "name": "Sementes",
-      "description": "Selecione e guarde sementes das melhores plantas para replantio. Essa seleção melhora colheita e estabilidade de alimento ao longo das gerações.",
+      "description": "Extraia sementes de gramíneas silvestres e separe as melhores para replantio. A seleção contínua aumenta produtividade e estabilidade alimentar.",
       "wiki": "https://pt.wikipedia.org/wiki/Semente"
     },
     "tilled_soil": {
